@@ -9,11 +9,18 @@ import type { Recipe } from "@/data/recipes"
 type RecipeHeroProps = {
   recipe: Recipe
   isFavorite: boolean
+  isFavoriteReady: boolean
   onFavoritePress?: () => void
   onBack: () => void
 }
 
-export function RecipeHero({ recipe, isFavorite, onFavoritePress, onBack }: RecipeHeroProps) {
+export function RecipeHero({
+  recipe,
+  isFavorite,
+  isFavoriteReady,
+  onFavoritePress,
+  onBack,
+}: RecipeHeroProps) {
   const insets = useSafeAreaInsets()
   const meta = [recipe.category, recipe.area].filter(Boolean).join(" · ")
 
@@ -32,11 +39,22 @@ export function RecipeHero({ recipe, isFavorite, onFavoritePress, onBack }: Reci
             <ArrowLeft color="#FFFFFF" size={22} />
           </HeaderIconButton>
           <HeaderIconButton
-            accessibilityLabel={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            accessibilityState={{ selected: isFavorite }}
+            accessibilityLabel={
+              isFavoriteReady
+                ? isFavorite
+                  ? "Remove from favorites"
+                  : "Add to favorites"
+                : "Loading favorite state"
+            }
+            accessibilityState={isFavoriteReady ? { selected: isFavorite } : undefined}
+            disabled={!isFavoriteReady}
             onPress={onFavoritePress}
           >
-            <Heart color="#FFFFFF" size={22} fill={isFavorite ? "#FFFFFF" : "transparent"} />
+            <Heart
+              color="#FFFFFF"
+              size={22}
+              fill={isFavoriteReady && isFavorite ? "#FFFFFF" : "transparent"}
+            />
           </HeaderIconButton>
         </View>
       </View>
@@ -55,7 +73,8 @@ export function RecipeHero({ recipe, isFavorite, onFavoritePress, onBack }: Reci
 
 type HeaderIconButtonProps = {
   accessibilityLabel: string
-  accessibilityState?: { selected?: boolean }
+  accessibilityState?: { selected?: boolean; disabled?: boolean }
+  disabled?: boolean
   onPress?: () => void
   children: ReactNode
 }
@@ -63,6 +82,7 @@ type HeaderIconButtonProps = {
 function HeaderIconButton({
   accessibilityLabel,
   accessibilityState,
+  disabled,
   onPress,
   children,
 }: HeaderIconButtonProps) {
@@ -70,9 +90,11 @@ function HeaderIconButton({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={accessibilityState}
+      accessibilityState={{ ...accessibilityState, disabled }}
+      disabled={disabled}
       onPress={onPress}
       className="h-11 w-11 items-center justify-center rounded-full bg-black/50"
+      style={{ opacity: disabled ? 0 : 1 }}
     >
       {children}
     </Pressable>

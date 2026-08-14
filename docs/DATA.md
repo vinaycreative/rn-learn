@@ -141,3 +141,31 @@ Shared TanStack Query hooks live in `src/data/recipes/hooks.ts`:
 - `useRecipesByArea`
 
 Search, detail, category, and area hooks stay disabled until their required argument is non-empty.
+
+---
+
+# Client Persistence
+
+Favorites and recently viewed recipes are client state. They are stored by recipe ID and a small display summary so lists can render without additional API requests.
+
+Persisted summaries include:
+
+- recipe ID
+- name
+- image URL
+- category
+- area
+- saved or viewed timestamp
+
+They do not store full recipe payloads, ingredients, or instructions.
+
+Persistence keys:
+
+- `recipe-explorer.favorites`
+- `recipe-explorer.recently-viewed`
+
+Storage goes through `src/lib/storage.ts`. Zustand persist adapters must not call AsyncStorage directly.
+
+Malformed persisted JSON is discarded and treated as empty state.
+
+Recently viewed history is capped at 20 recipes. Opening an already-recorded recipe updates its timestamp and moves it to the front.

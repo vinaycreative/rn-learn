@@ -16,6 +16,7 @@ import {
   SectionEmpty,
   SectionError,
 } from "@/features/home/section-state"
+import { RecentlyViewedSection } from "@/features/home/recently-viewed-section"
 import { useHomeDiscovery } from "@/features/home/use-home-discovery"
 
 export function HomeScreen() {
@@ -29,7 +30,7 @@ export function HomeScreen() {
   const renderRecipe = useCallback<ListRenderItem<RecipeSummary>>(({ item }) => {
     return (
       <View className="flex-1 px-xs pb-md">
-        <RecipeCard recipe={item} />
+        <RecipeCard recipe={item} showFavorite />
       </View>
     )
   }, [])
@@ -90,6 +91,8 @@ export function HomeScreen() {
             {featuredQuery.isSuccess && !featuredQuery.data ? (
               <SectionEmpty message="No featured recipe is available right now." />
             ) : null}
+
+            <RecentlyViewedSection />
 
             <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
               Categories

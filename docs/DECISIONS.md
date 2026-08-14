@@ -210,3 +210,23 @@ It provides sufficient recipe discovery capabilities for the current product sco
 ### Consequences
 
 The application must isolate provider-specific data structures behind the data layer.
+
+---
+
+## ADR-011 — Persist Local Recipe Summaries
+
+### Status
+
+Accepted
+
+### Decision
+
+Persist favorites and recently viewed recipes as ID-keyed local summaries, not full API payloads and not IDs alone.
+
+### Reason
+
+Lists must render after restart without fetching each recipe. Full recipe documents would duplicate TanStack Query server state. IDs alone would require a network request for every saved or recently viewed item.
+
+### Consequences
+
+Favorite and history records store only display fields needed by list UI: id, name, image URL, category, area, and a timestamp. Recipe details continue to load from TanStack Query.

@@ -66,7 +66,7 @@ export function ExploreScreen({ category, area }: ExploreScreenProps) {
   const renderRecipe = useCallback<ListRenderItem<RecipeSummary>>(({ item }) => {
     return (
       <View className="flex-1 px-xs pb-md">
-        <RecipeCard recipe={item} />
+        <RecipeCard recipe={item} showFavorite />
       </View>
     )
   }, [])

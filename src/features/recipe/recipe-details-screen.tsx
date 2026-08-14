@@ -20,8 +20,17 @@ export function RecipeDetailsScreen({ recipeId }: RecipeDetailsScreenProps) {
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
-  const { recipe, isLoading, isMissing, isError, error, refetch, isFavorite, onFavoritePress } =
-    useRecipeDetails(recipeId)
+  const {
+    recipe,
+    isLoading,
+    isMissing,
+    isError,
+    error,
+    refetch,
+    isFavorite,
+    isFavoriteReady,
+    onFavoritePress,
+  } = useRecipeDetails(recipeId)
 
   return (
     <View className="flex-1 bg-background dark:bg-background-dark">
@@ -60,6 +69,7 @@ export function RecipeDetailsScreen({ recipeId }: RecipeDetailsScreenProps) {
             <RecipeHero
               recipe={recipe}
               isFavorite={isFavorite}
+              isFavoriteReady={isFavoriteReady}
               onFavoritePress={onFavoritePress}
               onBack={goBack}
             />

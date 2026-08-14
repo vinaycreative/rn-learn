@@ -6,7 +6,7 @@ Feature implementation
 
 ## Current Focus
 
-Favorites.
+Settings.
 
 ---
 
@@ -31,6 +31,8 @@ Favorites.
 - [x] Home discovery screen (featured random recipe, categories, popular recipes)
 - [x] Explore screen (name search, category browsing, area/cuisine browsing)
 - [x] Recipe details screen (hero, ingredients, instructions, optional links)
+- [x] Favorites (Zustand store, AsyncStorage persistence, Favorites tab, card/details actions)
+- [x] Recently viewed (Zustand store, persistence, Home section, details recording)
 - [ ] Development build configured
 
 ---
@@ -43,8 +45,6 @@ None
 
 ## Next
 
-- Implement Favorites
-- Implement Recently Viewed
 - Implement Settings
 
 ---
