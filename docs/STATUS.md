@@ -1,10 +1,3 @@
----
-
-# 17. `docs/STATUS.md`
-
-This one should stay intentionally short and constantly updated.
-
-```md
 # Project Status
 
 ## Current Phase
@@ -19,17 +12,22 @@ Application bootstrap and development environment.
 
 ## Completed
 
-- [ ] Repository initialized
-- [ ] Expo application created
-- [ ] TypeScript configured
-- [ ] Expo Router configured
-- [ ] NativeWind configured
-- [ ] Tailwind configuration established
-- [ ] FlashList installed
-- [ ] TanStack Query configured
-- [ ] Zustand configured
-- [ ] AsyncStorage configured
-- [ ] Zod configured
+- [x] Repository initialized
+- [x] Expo application created
+- [x] TypeScript configured
+- [x] Expo Router configured (`src/app`)
+- [x] NativeWind configured
+- [x] Tailwind configuration established
+- [x] Design token foundation established
+- [x] Application providers configured (TanStack Query)
+- [x] Persistence boundary configured (AsyncStorage)
+- [x] Feature-oriented `src/` folder structure established
+- [x] FlashList installed
+- [x] TanStack Query configured
+- [x] Zustand installed (stores ready for feature work)
+- [x] AsyncStorage configured
+- [x] Zod configured
+- [x] Recipe data layer configured (TheMealDB client, schemas, repository, query hooks)
 - [ ] Development build configured
 
 ---
@@ -42,9 +40,6 @@ None
 
 ## Next
 
-- Establish application shell
-- Implement design tokens
-- Configure API layer
 - Implement Home
 - Implement Explore
 - Implement Recipe Details
