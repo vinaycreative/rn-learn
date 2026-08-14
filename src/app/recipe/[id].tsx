@@ -1,19 +1,22 @@
-import { useLocalSearchParams } from "expo-router"
-import { Text, View } from "react-native"
+import { Stack, useLocalSearchParams } from "expo-router"
+
+import { RecipeDetailsScreen } from "@/features/recipe"
 
 export default function RecipeDetailsRoute() {
-  const { id } = useLocalSearchParams<{ id: string }>()
+  const params = useLocalSearchParams<{ id?: string | string[] }>()
 
   return (
-    <View className="flex-1 items-center justify-center bg-background px-lg dark:bg-background-dark">
-      <Text className="text-center text-base text-foreground-muted dark:text-foreground-muted-dark">
-        Recipe details are not available yet.
-      </Text>
-      {id ? (
-        <Text className="mt-sm text-sm text-foreground-muted dark:text-foreground-muted-dark">
-          Recipe ID: {id}
-        </Text>
-      ) : null}
-    </View>
+    <>
+      <Stack.Screen options={{ headerShown: false, title: "Recipe" }} />
+      <RecipeDetailsScreen recipeId={readParam(params.id)} />
+    </>
   )
+}
+
+function readParam(value: string | string[] | undefined): string {
+  if (Array.isArray(value)) {
+    return value[0] ?? ""
+  }
+
+  return value ?? ""
 }

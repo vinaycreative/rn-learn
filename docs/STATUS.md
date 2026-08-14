@@ -6,7 +6,7 @@ Feature implementation
 
 ## Current Focus
 
-Explore search and browsing.
+Favorites.
 
 ---
 
@@ -30,6 +30,7 @@ Explore search and browsing.
 - [x] Recipe data layer configured (TheMealDB client, schemas, repository, query hooks)
 - [x] Home discovery screen (featured random recipe, categories, popular recipes)
 - [x] Explore screen (name search, category browsing, area/cuisine browsing)
+- [x] Recipe details screen (hero, ingredients, instructions, optional links)
 - [ ] Development build configured
 
 ---
@@ -42,8 +43,8 @@ None
 
 ## Next
 
-- Implement Recipe Details
 - Implement Favorites
+- Implement Recently Viewed
 - Implement Settings
 
 ---

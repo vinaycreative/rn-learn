@@ -10,9 +10,11 @@ type RecipeImageProps = {
   uri: string | null
   recyclingKey?: string
   className?: string
+  accessibilityLabel?: string
+  priority?: "low" | "normal" | "high"
 }
 
-export function RecipeImage({ uri, recyclingKey, className }: RecipeImageProps) {
+export function RecipeImage({ uri, recyclingKey, className, accessibilityLabel, priority }: RecipeImageProps) {
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
   const [hasFailed, setHasFailed] = useState(false)
@@ -30,8 +32,10 @@ export function RecipeImage({ uri, recyclingKey, className }: RecipeImageProps) 
           contentFit="cover"
           transition={200}
           recyclingKey={recyclingKey}
+          priority={priority}
           onError={() => setHasFailed(true)}
           style={{ width: "100%", height: "100%" }}
+          accessibilityLabel={accessibilityLabel}
           accessibilityIgnoresInvertColors
         />
       ) : (

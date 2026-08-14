@@ -1,25 +1,47 @@
-import { Href, Link } from 'expo-router';
-import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
-import { type ComponentProps } from 'react';
+import * as Linking from "expo-linking"
+import { openBrowserAsync, WebBrowserPresentationStyle } from "expo-web-browser"
+import { type ReactNode } from "react"
+import { Pressable, type PressableProps } from "react-native"
 
-type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: Href & string };
+type ExternalLinkProps = Omit<PressableProps, "onPress"> & {
+  href: string
+  children: ReactNode
+}
 
-export function ExternalLink({ href, ...rest }: Props) {
+export function ExternalLink({ href, children, ...rest }: ExternalLinkProps) {
+  if (!isSafeExternalUrl(href)) {
+    return null
+  }
+
   return (
-    <Link
-      target="_blank"
+    <Pressable
+      accessibilityRole="link"
       {...rest}
-      href={href}
-      onPress={async (event) => {
-        if (process.env.EXPO_OS !== 'web') {
-          // Prevent the default behavior of linking to the default browser on native.
-          event.preventDefault();
-          // Open the link in an in-app browser.
-          await openBrowserAsync(href, {
-            presentationStyle: WebBrowserPresentationStyle.AUTOMATIC,
-          });
-        }
+      onPress={() => {
+        void openExternalUrl(href)
       }}
-    />
-  );
+    >
+      {children}
+    </Pressable>
+  )
+}
+
+async function openExternalUrl(url: string) {
+  if (process.env.EXPO_OS === "web") {
+    await Linking.openURL(url)
+    return
+  }
+
+  await openBrowserAsync(url, {
+    presentationStyle: WebBrowserPresentationStyle.AUTOMATIC,
+  })
+}
+
+export function isSafeExternalUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url)
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+  } catch {
+    return false
+  }
 }
