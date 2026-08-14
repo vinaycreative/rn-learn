@@ -100,5 +100,6 @@ Domain stores live in `src/stores`.
 
 - `favorites-store` owns saved recipes and favorite actions.
 - `recently-viewed-store` owns local view history.
+- `preferences-store` owns application preferences, including theme preference.
 
 Stores persist through `src/lib/persist-storage.ts` and `src/lib/storage.ts`. Presentation components must not read or write AsyncStorage directly.

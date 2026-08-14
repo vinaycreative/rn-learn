@@ -230,3 +230,23 @@ Lists must render after restart without fetching each recipe. Full recipe docume
 ### Consequences
 
 Favorite and history records store only display fields needed by list UI: id, name, image URL, category, area, and a timestamp. Recipe details continue to load from TanStack Query.
+
+---
+
+## ADR-012 — Theme Preference via Appearance
+
+### Status
+
+Accepted
+
+### Decision
+
+Persist theme preference (`system` / `light` / `dark`) in `preferences-store` and apply it with React Native `Appearance.setColorScheme`.
+
+### Reason
+
+Existing screens and shared components already resolve colors through `useColorScheme` and NativeWind `dark:` classes. Overriding Appearance keeps a single theme system instead of a parallel color-scheme hook.
+
+### Consequences
+
+`system` passes `null` to `Appearance.setColorScheme` so the app follows the device. Light and dark force those schemes. Preference is applied only after persistence hydration.

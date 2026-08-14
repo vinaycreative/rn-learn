@@ -6,7 +6,7 @@ Feature implementation
 
 ## Current Focus
 
-Settings.
+None. Settings is implemented.
 
 ---
 
@@ -33,6 +33,7 @@ Settings.
 - [x] Recipe details screen (hero, ingredients, instructions, optional links)
 - [x] Favorites (Zustand store, AsyncStorage persistence, Favorites tab, card/details actions)
 - [x] Recently viewed (Zustand store, persistence, Home section, details recording)
+- [x] Settings (theme preference, local data controls, about)
 - [ ] Development build configured
 
 ---
@@ -45,7 +46,7 @@ None
 
 ## Next
 
-- Implement Settings
+- Development build configuration
 
 ---
 

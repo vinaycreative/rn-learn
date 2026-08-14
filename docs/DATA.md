@@ -163,6 +163,9 @@ Persistence keys:
 
 - `recipe-explorer.favorites`
 - `recipe-explorer.recently-viewed`
+- `recipe-explorer.preferences`
+
+Preferences persist `themePreference` as `system`, `light`, or `dark`. Invalid values fall back to `system`.
 
 Storage goes through `src/lib/storage.ts`. Zustand persist adapters must not call AsyncStorage directly.
 
