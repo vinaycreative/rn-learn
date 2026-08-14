@@ -88,6 +88,8 @@ Base URL:
 
 TheMealDB returns `{ meals: null }` when a list endpoint has no matches. The repository treats that as an empty array for search and filter operations.
 
+Area catalog names are unique. Duplicate `strArea` values from TheMealDB are dropped after mapping.
+
 Lookup-by-ID with no meal is `not_found`.
 Random with no meal is `empty`.
 

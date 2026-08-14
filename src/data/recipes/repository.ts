@@ -4,6 +4,7 @@ import {
   mapCategoryToRecipeCategory,
   mapMealSummaryToRecipeSummary,
   mapMealToRecipe,
+  uniqueNamedItems,
 } from "@/data/recipes/mappers"
 import type { Recipe, RecipeArea, RecipeCategory, RecipeSummary } from "@/data/recipes/models"
 import { parseApiPayload } from "@/data/recipes/parse"
@@ -100,7 +101,7 @@ export const recipeRepository = {
       return []
     }
 
-    return parsed.meals.map(mapAreaToRecipeArea)
+    return uniqueNamedItems(parsed.meals.map(mapAreaToRecipeArea))
   },
 
   async getByCategory(category: string, options?: ThemealdbRequestOptions): Promise<RecipeSummary[]> {

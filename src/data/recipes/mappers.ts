@@ -85,3 +85,16 @@ export function mapAreaToRecipeArea(area: ThemealdbArea): RecipeArea {
     name: area.strArea.trim(),
   }
 }
+
+export function uniqueNamedItems<T extends { name: string }>(items: T[]): T[] {
+  const seenNames = new Set<string>()
+
+  return items.filter((item) => {
+    if (!item.name || seenNames.has(item.name)) {
+      return false
+    }
+
+    seenNames.add(item.name)
+    return true
+  })
+}

@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-Quality and production-readiness
+Complete
 
 ## Current Focus
 
-None. Feature implementation is complete. A production-readiness audit was completed on 2026-08-14.
+None. Feature implementation, production configuration, and end-to-end verification are complete as of 2026-08-14.
 
 ---
 
@@ -35,7 +35,11 @@ None. Feature implementation is complete. A production-readiness audit was compl
 - [x] Recently viewed (Zustand store, persistence, Home section, details recording)
 - [x] Settings (theme preference, local data controls, about)
 - [x] Production-readiness audit (types, lint, query/store/list/image/a11y/error handling, focused tests)
-- [ ] Development build configured
+- [x] Application metadata set for Recipe Explorer (`app.json` name, slug, identifiers, splash)
+- [x] EAS build profiles (`development`, `preview`, `production`)
+- [x] Development client dependency (`expo-dev-client`)
+- [x] GitHub Actions validation workflow (install, typecheck, lint, test, Expo Doctor)
+- [x] End-to-end verification (static journey review, TheMealDB live catalog check, automated validation)
 
 ---
 
@@ -47,14 +51,19 @@ None
 
 ## Next
 
-- Development build configuration
+- Run `eas login` and `eas init` to attach a real Expo project ID
+- Create iOS and Android signing credentials when the first device or store build is needed
+- Produce the first development and preview binaries
+- Device or simulator check of light, dark, and system appearance (Xcode `simctl` and `adb` were not available on the verification machine)
 
 ---
 
 ## Known Issues
 
-- No Expo development build has been configured yet. The app currently runs through Expo Go / `expo start`.
+- No Expo project ID is committed. Cloud EAS builds cannot run until `eas init` is completed with an Expo account.
+- Store submission is not configured. Apple and Google credentials must be created outside the repository.
 - Theme preference is not exercised automatically in CI. Light, dark, and system appearance still need a device or simulator check after client changes.
+- TheMealDB `list.php?a=list` currently returns duplicate cuisine names (`Dominican`, `Congolese`, `Channel Islander`). The repository now collapses duplicates after mapping.
 
 ---
 

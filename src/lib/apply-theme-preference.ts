@@ -3,6 +3,10 @@ import { Appearance } from "react-native"
 import { usePreferencesStore, type ThemePreference } from "@/stores/preferences-store"
 
 export function applyThemePreference(preference: ThemePreference) {
+  if (typeof Appearance.setColorScheme !== "function") {
+    return
+  }
+
   Appearance.setColorScheme(preference === "system" ? null : preference)
 }
 

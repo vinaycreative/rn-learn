@@ -1,4 +1,9 @@
-import { extractIngredients, mapMealToRecipe, parseRecipeTags } from "@/data/recipes/mappers"
+import {
+  extractIngredients,
+  mapMealToRecipe,
+  parseRecipeTags,
+  uniqueNamedItems,
+} from "@/data/recipes/mappers"
 import type { ThemealdbMeal } from "@/data/themealdb/schemas"
 
 function createMeal(overrides: Partial<ThemealdbMeal> = {}): ThemealdbMeal {
@@ -48,5 +53,17 @@ describe("recipe mappers", () => {
     expect(parseRecipeTags("Dinner, ,  Easy")).toEqual(["Dinner", "Easy"])
     expect(parseRecipeTags("   ")).toEqual([])
     expect(parseRecipeTags(null)).toEqual([])
+  })
+
+  it("drops duplicate and blank names from catalog lists", () => {
+    expect(
+      uniqueNamedItems([
+        { name: "Dominican" },
+        { name: "Italian" },
+        { name: "Dominican" },
+        { name: "" },
+        { name: "Congolese" },
+      ]),
+    ).toEqual([{ name: "Dominican" }, { name: "Italian" }, { name: "Congolese" }])
   })
 })

@@ -249,4 +249,24 @@ Existing screens and shared components already resolve colors through `useColorS
 
 ### Consequences
 
-`system` passes `null` to `Appearance.setColorScheme` so the app follows the device. Light and dark force those schemes. Preference is applied only after persistence hydration.
+`system` passes `null` to `Appearance.setColorScheme` so the app follows the device. Light and dark force those schemes. Preference is applied only after persistence hydration. If `Appearance.setColorScheme` is missing (Expo Router web SSR in Node), the call is skipped so hydration cannot crash the bundler.
+
+---
+
+## ADR-013 — EAS Build Profiles and Local Versioning
+
+### Status
+
+Accepted
+
+### Decision
+
+Use EAS Build with `development`, `preview`, and `production` profiles. Keep `appVersionSource` as `local` and do not enable automatic version incrementing. Do not configure store submit credentials in the repository.
+
+### Reason
+
+The project needs reproducible native builds for a development client and future store binaries, but versioning and signing are still manual. Remote versioning and submit profiles would imply credentials and automation that are not in place.
+
+### Consequences
+
+`eas.json` is the build-profile source of truth. An Expo project ID is added only after `eas init`. App Store and Play submission remain out of scope until credentials exist outside the repo.
