@@ -1,0 +1,103 @@
+---
+
+# 6. `.cursor/rules/data.mdc`
+
+```md
+---
+
+description: API, repositories, schemas, TanStack Query, and data transformation rules
+alwaysApply: true
+
+---
+
+# Data Rules
+
+## Server State
+
+Use TanStack Query for server state.
+
+Do not copy query data into Zustand merely to make it globally accessible.
+
+---
+
+## API Boundary
+
+External API communication must go through the data layer.
+
+Preferred structure:
+
+Feature
+→ Query Hook
+→ Repository
+→ API Client
+→ External API
+
+---
+
+## External Data
+
+Treat external responses as untrusted.
+
+Validate external responses at the boundary using Zod schemas where appropriate.
+
+Do not expose raw external API response structures throughout the UI.
+
+---
+
+## Models
+
+Distinguish between:
+
+- external API models
+- application/domain models
+- persistence models
+
+Transform data at the appropriate boundary.
+
+---
+
+## Query Keys
+
+Query keys must be:
+
+- deterministic
+- descriptive
+- centrally consistent
+
+Do not create multiple query-key formats for the same resource.
+
+---
+
+## Caching
+
+Define cache behavior intentionally.
+
+Consider:
+
+- stale time
+- garbage collection
+- refetch behavior
+- invalidation
+- network failures
+
+Do not disable caching globally to solve an isolated problem.
+
+---
+
+## Errors
+
+Normalize external errors before presenting them to UI components.
+
+UI should not need to understand HTTP implementation details.
+
+---
+
+## Mutations
+
+After mutations:
+
+- invalidate affected queries,
+- update cached data,
+- or optimistically update when appropriate.
+
+Do not blindly refetch unrelated queries.

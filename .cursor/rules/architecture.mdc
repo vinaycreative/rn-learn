@@ -1,0 +1,174 @@
+---
+description: Architecture and module-boundary rules for the React Native application
+alwaysApply: true
+---
+
+# Architecture Rules
+
+## Architecture Style
+
+Use a feature-oriented React Native architecture.
+
+Keep route composition, presentation, business logic, data access, and persistence responsibilities separated.
+
+Preferred flow:
+
+Route
+→ Feature UI
+→ Feature Hook
+→ Repository / Service
+→ API Client / Persistence
+
+---
+
+## Route Layer
+
+Expo Router route files should remain thin.
+
+Routes are responsible for:
+
+- route composition
+- route parameters
+- navigation-level configuration
+- connecting routes to feature components
+
+Routes should not contain:
+
+- API implementation
+- business logic
+- large UI components
+- persistence logic
+
+---
+
+## Feature Layer
+
+Features own functionality specific to a product capability.
+
+Examples:
+
+- home
+- explore
+- recipe
+- favorites
+- settings
+
+A feature may contain:
+
+- components
+- hooks
+- feature-specific types
+- feature-specific utilities
+- feature-specific query configuration
+
+Do not move code into shared modules until it is genuinely shared.
+
+---
+
+## Shared Components
+
+Shared components should contain reusable presentation or interaction behavior.
+
+Do not create generic abstractions prematurely.
+
+Prefer:
+
+`RecipeCard`
+
+over:
+
+`UniversalDataCard<T>`
+
+unless the abstraction has a real use case.
+
+---
+
+## Data Layer
+
+External data must flow through the data layer.
+
+Preferred flow:
+
+UI
+→ Query Hook
+→ Repository
+→ API Client
+→ External API
+
+UI components must not call external APIs directly.
+
+---
+
+## State Boundaries
+
+Use:
+
+- React state for local component state.
+- TanStack Query for server state.
+- Zustand for global client state.
+- AsyncStorage through an explicit persistence mechanism.
+
+Do not duplicate the same state across multiple systems.
+
+---
+
+## Dependency Direction
+
+Higher-level presentation code may depend on lower-level application services.
+
+Lower-level data modules must not depend on UI components.
+
+Avoid circular dependencies.
+
+---
+
+## New Abstractions
+
+Before creating a new abstraction:
+
+1. Search for an existing equivalent.
+2. Determine whether the behavior is truly shared.
+3. Prefer the smallest abstraction that solves the problem.
+4. Avoid abstraction for hypothetical future requirements.
+
+---
+
+## Folder Responsibilities
+
+`src/app`
+
+- Expo Router routes and layouts.
+
+`src/features`
+
+- Product feature implementation.
+
+`src/components`
+
+- Shared UI components.
+
+`src/data`
+
+- API clients, repositories, schemas, and data transformations.
+
+`src/stores`
+
+- Global client state.
+
+`src/hooks`
+
+- Truly shared hooks.
+
+`src/lib`
+
+- Infrastructure integrations and configured libraries.
+
+`src/constants`
+
+- Application constants.
+
+`src/types`
+
+- Shared application types.
+
+Do not use folders as miscellaneous dumping grounds.

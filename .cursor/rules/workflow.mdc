@@ -1,0 +1,88 @@
+---
+description: AI-assisted development workflow for implementing and reviewing changes
+alwaysApply: true
+---
+
+# Development Workflow
+
+## Phase 1 — Understand
+
+Before coding:
+
+1. Read the request carefully.
+2. Identify the affected feature.
+3. Inspect existing related code.
+4. Read applicable project documentation.
+5. Read applicable Cursor rules.
+6. Check installed skills relevant to the task.
+
+---
+
+## Phase 2 — Plan
+
+Determine:
+
+- affected files
+- existing abstractions to reuse
+- data requirements
+- UI requirements
+- state requirements
+- tests required
+
+Do not create files until their responsibility is clear.
+
+---
+
+## Phase 3 — Implement
+
+Implement the smallest complete change.
+
+Follow existing patterns.
+
+Avoid unrelated refactoring.
+
+---
+
+## Phase 4 — Validate
+
+Run appropriate:
+
+- type checking
+- linting
+- tests
+- build checks
+
+Verify the affected UI behavior.
+
+---
+
+## Phase 5 — Review
+
+Inspect:
+
+- git diff
+- changed files
+- new dependencies
+- architecture impact
+- accessibility
+- loading/error/empty states
+
+---
+
+## Phase 6 — Documentation
+
+Update project documentation only when the implementation changes:
+
+- requirements
+- architecture
+- API/data behavior
+- design behavior
+- important decisions
+- development workflow
+- current status
+
+Do not update documentation merely to restate code.
+
+---
+
+##

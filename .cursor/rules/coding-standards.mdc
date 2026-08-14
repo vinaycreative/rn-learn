@@ -1,0 +1,101 @@
+---
+description: TypeScript, React, naming, and general coding standards
+alwaysApply: true
+---
+
+# Coding Standards
+
+## TypeScript
+
+Use strict TypeScript.
+
+Avoid:
+
+- `any`
+- unnecessary type assertions
+- non-null assertions
+- duplicated types
+- implicit API response shapes
+
+Prefer explicit types at application boundaries.
+
+---
+
+## React
+
+Use functional components.
+
+Prefer composition over inheritance.
+
+Keep components focused.
+
+Avoid large components containing unrelated concerns.
+
+Extract logic into hooks when it improves separation and readability.
+
+---
+
+## Naming
+
+Use:
+
+- PascalCase for React components.
+- camelCase for variables, functions, and hooks.
+- `useX` naming for hooks.
+- descriptive names for domain concepts.
+- kebab-case or the repository's established naming convention for route paths.
+
+Avoid ambiguous names such as:
+
+- `data`
+- `item`
+- `thing`
+- `helper`
+- `utils2`
+
+when a domain-specific name is available.
+
+---
+
+## Imports
+
+Keep imports organized.
+
+Prefer path aliases where configured.
+
+Avoid deep imports into another feature's private implementation.
+
+---
+
+## Error Handling
+
+Do not silently swallow errors.
+
+Errors should either:
+
+- be handled at the appropriate boundary,
+- be converted into user-facing state,
+- or be propagated to a layer that can handle them.
+
+---
+
+## Comments
+
+Write comments only when they explain:
+
+- non-obvious reasoning
+- important constraints
+- workarounds
+- external limitations
+
+Do not comment obvious code.
+
+Avoid comments that simply restate the implementation.
+
+---
+
+## Refactoring
+
+Do not combine unrelated refactoring with feature work.
+
+If a refactor is required to safely implement a feature, keep it minimal and explain why.

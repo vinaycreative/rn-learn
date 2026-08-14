@@ -1,0 +1,103 @@
+---
+description: React Native and Expo implementation rules
+alwaysApply: true
+---
+
+# React Native Rules
+
+## Platform
+
+Use Expo APIs and React Native APIs where they provide the required capability.
+
+Prefer Expo-supported solutions before introducing custom native modules.
+
+---
+
+## Architecture
+
+Use Expo Router for navigation.
+
+Use the React Native New Architecture-compatible ecosystem.
+
+Follow current Expo recommendations and installed Expo Skills for framework-specific implementation.
+
+---
+
+## Lists
+
+Use `@shopify/flash-list` for dynamic collections.
+
+Use appropriate item keys.
+
+Avoid rendering large collections inside ScrollView.
+
+Avoid nesting virtualized lists unnecessarily.
+
+---
+
+## Rendering
+
+Avoid unnecessary work during render.
+
+Do not perform:
+
+- network requests
+- expensive calculations
+- persistence operations
+
+directly during render.
+
+---
+
+## Images
+
+Use appropriate image sizing and loading strategies.
+
+Avoid unnecessarily rendering full-resolution assets when a smaller asset is sufficient.
+
+Provide meaningful fallback behavior for failed image loading.
+
+---
+
+## Safe Areas
+
+Respect safe areas on iOS and Android.
+
+Do not manually hard-code status-bar offsets.
+
+---
+
+## Keyboard
+
+Forms and text input must behave correctly when the keyboard appears.
+
+Avoid layouts that hide important controls behind the keyboard.
+
+---
+
+## Animations
+
+Use Reanimated for animations that require smooth UI-thread execution.
+
+Avoid JavaScript-driven animation loops for performance-sensitive interactions.
+
+---
+
+## Gestures
+
+Use the appropriate gesture system for complex gestures.
+
+Keep gesture logic isolated from unrelated business logic.
+
+---
+
+## Accessibility
+
+Interactive elements should provide:
+
+- accessible labels
+- appropriate roles
+- usable touch targets
+- meaningful state information
+
+Do not rely exclusively on visual styling to communicate state.

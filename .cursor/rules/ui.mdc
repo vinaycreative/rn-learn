@@ -1,0 +1,16 @@
+---
+description: UI, NativeWind, design system, component, and interaction rules
+alwaysApply: true
+---
+
+# UI Rules
+
+## Styling System
+
+NativeWind is the primary styling solution.
+
+Prefer:
+
+```tsx
+<View className="flex-1 px-4">
+```

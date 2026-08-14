@@ -1,0 +1,66 @@
+---
+description: Testing strategy and test implementation rules
+alwaysApply: true
+---
+
+# Testing Rules
+
+## Philosophy
+
+Test behavior, not implementation details.
+
+Tests should describe what the user or system expects.
+
+---
+
+## Component Tests
+
+Prioritize:
+
+- rendering important content
+- user interactions
+- loading states
+- empty states
+- error states
+- accessibility behavior
+
+---
+
+## Data Tests
+
+Test:
+
+- API response transformation
+- validation
+- repository behavior
+- important error conditions
+
+---
+
+## Query Tests
+
+Test meaningful query behavior where it contains application-specific logic.
+
+Do not test TanStack Query internals.
+
+---
+
+## Regression Tests
+
+When fixing a reproducible bug, add a regression test when practical.
+
+---
+
+## Mocking
+
+Mock external systems at the appropriate boundary.
+
+Do not mock every internal function simply to make tests pass.
+
+---
+
+## Snapshots
+
+Avoid large snapshot suites that are difficult to maintain.
+
+Prefer targeted behavioral assertions.

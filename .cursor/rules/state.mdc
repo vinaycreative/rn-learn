@@ -1,0 +1,72 @@
+---
+description: State ownership and persistence rules
+alwaysApply: true
+---
+
+# State Management Rules
+
+Use the smallest state mechanism appropriate for the problem.
+
+## Local UI State
+
+Use React state for:
+
+- modal visibility
+- input state
+- temporary UI selections
+- component-specific interactions
+
+---
+
+## Server State
+
+Use TanStack Query for:
+
+- recipes
+- search results
+- categories
+- areas
+- remote API data
+
+---
+
+## Global Client State
+
+Use Zustand for:
+
+- favorites
+- recently viewed
+- application preferences
+- global UI state that genuinely needs cross-feature access
+
+---
+
+## Persistence
+
+Persist only state that needs to survive application restarts.
+
+Use AsyncStorage through the application's persistence layer.
+
+Do not persist temporary UI state.
+
+---
+
+## Duplication
+
+Avoid maintaining the same state in:
+
+- React state
+- Zustand
+- TanStack Query
+
+at the same time.
+
+There should be one authoritative owner for each state value.
+
+---
+
+## Store Design
+
+Keep stores domain-focused.
+
+Avoid one giant global store containing unrelated application state.
