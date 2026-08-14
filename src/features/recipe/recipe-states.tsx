@@ -1,5 +1,7 @@
 import { ErrorState } from "@/components/async-state"
-import { Text, View } from "react-native"
+import { AppText } from "@/components/ui/app-text"
+import { Skeleton } from "@/components/ui/skeleton"
+import { View } from "react-native"
 
 type RecipeErrorProps = {
   error: unknown
@@ -12,13 +14,11 @@ export function RecipeError({ error, onRetry }: RecipeErrorProps) {
 
 export function RecipeMissing() {
   return (
-    <View className="rounded-xl bg-surface px-lg py-lg dark:bg-surface-dark">
-      <Text className="text-base font-semibold text-foreground dark:text-foreground-dark">
-        Recipe not found
-      </Text>
-      <Text className="mt-xs text-sm text-foreground-muted dark:text-foreground-muted-dark">
+    <View className="rounded-3xl bg-surface px-xl py-xl dark:bg-surface-dark">
+      <AppText variant="title">Recipe not found</AppText>
+      <AppText variant="body" tone="muted" className="mt-sm">
         This recipe is unavailable or no longer exists.
-      </Text>
+      </AppText>
     </View>
   )
 }
@@ -26,15 +26,19 @@ export function RecipeMissing() {
 export function RecipeDetailsSkeleton() {
   return (
     <View accessibilityLabel="Loading recipe">
-      <View className="h-80 w-full bg-surface dark:bg-surface-dark" />
-      <View className="px-lg pt-xl">
-        <View className="h-8 w-3/4 rounded-md bg-surface dark:bg-surface-dark" />
-        <View className="mt-md h-4 w-1/2 rounded-md bg-surface dark:bg-surface-dark" />
-        <View className="mt-xl h-5 w-32 rounded-md bg-surface dark:bg-surface-dark" />
-        <View className="mt-md h-16 w-full rounded-xl bg-surface dark:bg-surface-dark" />
-        <View className="mt-sm h-16 w-full rounded-xl bg-surface dark:bg-surface-dark" />
-        <View className="mt-xl h-5 w-40 rounded-md bg-surface dark:bg-surface-dark" />
-        <View className="mt-md h-40 w-full rounded-xl bg-surface dark:bg-surface-dark" />
+      <Skeleton className="aspect-[4/3] w-full" />
+      <View className="-mt-8 rounded-t-3xl bg-background px-xl pb-lg pt-xl dark:bg-background-dark">
+        <Skeleton className="h-10 w-3/4 rounded-md" />
+        <Skeleton className="mt-sm h-4 w-1/3 rounded-md" />
+      </View>
+      <View className="px-xl pt-lg">
+        <Skeleton className="h-11 w-full rounded-md" />
+      </View>
+      <View className="gap-sm px-xl pt-md">
+        <Skeleton className="h-12 w-full rounded-2xl" />
+        <Skeleton className="h-12 w-full rounded-2xl" />
+        <Skeleton className="h-12 w-full rounded-2xl" />
+        <Skeleton className="h-12 w-full rounded-2xl" />
       </View>
     </View>
   )

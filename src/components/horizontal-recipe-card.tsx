@@ -2,11 +2,10 @@ import { Link } from "expo-router"
 import { memo } from "react"
 import { View } from "react-native"
 
-import { FavoriteButton } from "@/components/favorite-button"
 import { RecipeImage } from "@/components/recipe-image"
 import {
-  FAVORITE_BUTTON_OFFSET_CLASS,
-  GRID_IMAGE_ASPECT_CLASS,
+  HORIZONTAL_CARD_WIDTH,
+  HORIZONTAL_IMAGE_ASPECT_CLASS,
   RECIPE_CARD_BORDER_CLASS,
   RECIPE_CARD_RADIUS_CLASS,
 } from "@/components/recipe-cards/constants"
@@ -16,16 +15,15 @@ import type { RecipeCardData } from "@/components/recipe-cards/types"
 import { PressableScale } from "@/components/ui/pressable-scale"
 import { shadows } from "@/constants/theme"
 
-type RecipeCardProps = {
+type HorizontalRecipeCardProps = {
   recipe: RecipeCardData
-  showFavorite?: boolean
 }
 
-function RecipeCardComponent({ recipe, showFavorite = false }: RecipeCardProps) {
+function HorizontalRecipeCardComponent({ recipe }: HorizontalRecipeCardProps) {
   const meta = formatRecipeMeta(recipe)
 
   return (
-    <View className="relative w-full">
+    <View className="relative" style={{ width: HORIZONTAL_CARD_WIDTH }}>
       <Link href={`/recipe/${recipe.id}`} asChild>
         <PressableScale
           accessibilityRole="link"
@@ -38,18 +36,13 @@ function RecipeCardComponent({ recipe, showFavorite = false }: RecipeCardProps) 
             recyclingKey={recipe.id}
             variant="card"
             accessibilityLabel={`${recipe.name} photo`}
-            className={`w-full ${GRID_IMAGE_ASPECT_CLASS}`}
+            className={`w-full ${HORIZONTAL_IMAGE_ASPECT_CLASS}`}
           />
-          <RecipeCardBody title={recipe.name} meta={meta} size="grid" />
+          <RecipeCardBody title={recipe.name} meta={meta} size="horizontal" />
         </PressableScale>
       </Link>
-      {showFavorite ? (
-        <View className={FAVORITE_BUTTON_OFFSET_CLASS}>
-          <FavoriteButton recipe={recipe} variant="overlay" />
-        </View>
-      ) : null}
     </View>
   )
 }
 
-export const RecipeCard = memo(RecipeCardComponent)
+export const HorizontalRecipeCard = memo(HorizontalRecipeCardComponent)

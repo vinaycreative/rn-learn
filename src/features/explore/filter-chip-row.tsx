@@ -1,6 +1,6 @@
-import { Pressable, ScrollView, Text } from "react-native"
-
+import { Chip } from "@/components/ui/chip"
 import { spacing } from "@/constants/theme"
+import { ScrollView } from "react-native"
 
 type FilterChip = {
   id: string
@@ -29,34 +29,14 @@ export function FilterChipRow({ chips, selectedId, onSelect, accessibilityLabel 
         paddingRight: spacing.lg,
       }}
     >
-      {chips.map((chip) => {
-        const isSelected = chip.id === selectedId
-
-        return (
-          <Pressable
-            key={chip.id}
-            accessibilityRole="button"
-            accessibilityLabel={chip.label}
-            accessibilityState={{ selected: isSelected }}
-            onPress={() => onSelect(chip.id)}
-            className={`min-h-[44px] items-center justify-center rounded-full px-lg ${
-              isSelected
-                ? "bg-primary dark:bg-primary-dark"
-                : "bg-surface dark:bg-surface-dark"
-            }`}
-          >
-            <Text
-              className={`text-sm font-medium ${
-                isSelected
-                  ? "text-primary-foreground dark:text-primary-foreground-dark"
-                  : "text-foreground dark:text-foreground-dark"
-              }`}
-            >
-              {chip.label}
-            </Text>
-          </Pressable>
-        )
-      })}
+      {chips.map((chip) => (
+        <Chip
+          key={chip.id}
+          label={chip.label}
+          selected={chip.id === selectedId}
+          onPress={() => onSelect(chip.id)}
+        />
+      ))}
     </ScrollView>
   )
 }

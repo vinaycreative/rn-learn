@@ -1,17 +1,124 @@
 import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { Compass } from "lucide-react-native"
-import { useCallback, useMemo } from "react"
-import { KeyboardAvoidingView, Platform, Pressable, Text, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-
+import { Search } from "lucide-react-native"
+import { memo, useCallback, useMemo } from "react"
+import { KeyboardAvoidingView, Platform, View } from "react-native"
+import { useBottomTabBarLayout } from "@/components/bottom-tab-bar"
 import { RecipeCard } from "@/components/recipe-card"
-import { colors, spacing } from "@/constants/theme"
+import { SearchInput } from "@/components/search-input"
+import { ScreenHeader, SectionHeader, SECTION_GAP_CLASS, LIST_HEADER_PADDING_CLASS } from "@/components/ui/section-header"
+import { spacing } from "@/constants/theme"
 import type { RecipeSummary } from "@/data/recipes"
 import { ExploreEmpty, ExploreError, FilterChipsSkeleton, RecipeResultsSkeleton } from "@/features/explore/explore-states"
 import { FilterChipRow } from "@/features/explore/filter-chip-row"
-import { SearchField } from "@/features/explore/search-field"
 import { useExplore, type ExploreMode } from "@/features/explore/use-explore"
-import { useColorScheme } from "@/hooks/use-color-scheme"
+
+type FilterChipOption = {
+  id: string
+  label: string
+}
+
+type ExploreFiltersHeaderProps = {
+  mode: ExploreMode
+  selectedCategory: string
+  selectedArea: string
+  resultsTitle: string
+  categoryChips: FilterChipOption[]
+  areaChips: FilterChipOption[]
+  categoriesPending: boolean
+  categoriesErrored: boolean
+  categoriesError: unknown
+  categoriesSucceeded: boolean
+  areasPending: boolean
+  areasErrored: boolean
+  areasError: unknown
+  areasSucceeded: boolean
+  onRetryCategories: () => void
+  onRetryAreas: () => void
+  onSelectCategory: (name: string) => void
+  onSelectArea: (name: string) => void
+  onClearBrowse: () => void
+}
+
+const ExploreFiltersHeader = memo(function ExploreFiltersHeader({
+  mode,
+  selectedCategory,
+  selectedArea,
+  resultsTitle,
+  categoryChips,
+  areaChips,
+  categoriesPending,
+  categoriesErrored,
+  categoriesError,
+  categoriesSucceeded,
+  areasPending,
+  areasErrored,
+  areasError,
+  areasSucceeded,
+  onRetryCategories,
+  onRetryAreas,
+  onSelectCategory,
+  onSelectArea,
+  onClearBrowse,
+}: ExploreFiltersHeaderProps) {
+  const showBrowseFilters = mode !== "search"
+
+  return (
+    <View className={LIST_HEADER_PADDING_CLASS}>
+      {showBrowseFilters ? (
+        <>
+          <View className={SECTION_GAP_CLASS}>
+            <SectionHeader title="Categories" />
+            {categoriesPending ? <FilterChipsSkeleton label="Loading categories" /> : null}
+            {categoriesErrored ? (
+              <ExploreError error={categoriesError} onRetry={onRetryCategories} label="Could not load categories" />
+            ) : null}
+            {categoriesSucceeded && categoryChips.length > 0 ? (
+              <FilterChipRow
+                chips={categoryChips}
+                selectedId={selectedCategory}
+                onSelect={onSelectCategory}
+                accessibilityLabel="Recipe categories"
+              />
+            ) : null}
+            {categoriesSucceeded && categoryChips.length === 0 ? (
+              <ExploreEmpty message="No recipe categories are available." />
+            ) : null}
+          </View>
+
+          <View className={SECTION_GAP_CLASS}>
+            <SectionHeader title="Cuisines" />
+            {areasPending ? <FilterChipsSkeleton label="Loading cuisines" /> : null}
+            {areasErrored ? (
+              <ExploreError error={areasError} onRetry={onRetryAreas} label="Could not load cuisines" />
+            ) : null}
+            {areasSucceeded && areaChips.length > 0 ? (
+              <FilterChipRow
+                chips={areaChips}
+                selectedId={selectedArea}
+                onSelect={onSelectArea}
+                accessibilityLabel="Recipe cuisines"
+              />
+            ) : null}
+            {areasSucceeded && areaChips.length === 0 ? (
+              <ExploreEmpty message="No recipe cuisines are available." />
+            ) : null}
+          </View>
+        </>
+      ) : null}
+
+      {mode !== "browse" ? (
+        <View className={showBrowseFilters ? SECTION_GAP_CLASS : "mt-lg"}>
+          <SectionHeader
+            title={resultsTitle}
+            actionLabel={mode === "category" || mode === "area" ? "Clear" : undefined}
+            actionAccessibilityLabel="Clear filter"
+            onActionPress={mode === "category" || mode === "area" ? onClearBrowse : undefined}
+          />
+        </View>
+      ) : null}
+    </View>
+  )
+})
 
 type ExploreScreenProps = {
   category: string
@@ -19,9 +126,7 @@ type ExploreScreenProps = {
 }
 
 export function ExploreScreen({ category, area }: ExploreScreenProps) {
-  const insets = useSafeAreaInsets()
-  const colorScheme = useColorScheme() ?? "light"
-  const palette = colors[colorScheme]
+  const { topInset, contentPaddingBottom } = useBottomTabBarLayout()
   const {
     searchInput,
     setSearchInput,
@@ -77,13 +182,107 @@ export function ExploreScreen({ category, area }: ExploreScreenProps) {
     void resultsQuery?.refetch()
   }, [areasQuery, categoriesQuery, resultsQuery])
 
+  const onRetryCategories = useCallback(() => {
+    void categoriesQuery.refetch()
+  }, [categoriesQuery])
+
+  const onRetryAreas = useCallback(() => {
+    void areasQuery.refetch()
+  }, [areasQuery])
+
+  const onRetryResults = useCallback(() => {
+    void resultsQuery?.refetch()
+  }, [resultsQuery])
+
+  const listHeader = useMemo(
+    () => (
+      <ExploreFiltersHeader
+        mode={mode}
+        selectedCategory={selectedCategory}
+        selectedArea={selectedArea}
+        resultsTitle={resultsTitle}
+        categoryChips={categoryChips}
+        areaChips={areaChips}
+        categoriesPending={categoriesQuery.isPending}
+        categoriesErrored={categoriesQuery.isError}
+        categoriesError={categoriesQuery.error}
+        categoriesSucceeded={categoriesQuery.isSuccess}
+        areasPending={areasQuery.isPending}
+        areasErrored={areasQuery.isError}
+        areasError={areasQuery.error}
+        areasSucceeded={areasQuery.isSuccess}
+        onRetryCategories={onRetryCategories}
+        onRetryAreas={onRetryAreas}
+        onSelectCategory={selectCategory}
+        onSelectArea={selectArea}
+        onClearBrowse={clearBrowse}
+      />
+    ),
+    [
+      areaChips,
+      areasQuery.error,
+      areasQuery.isError,
+      areasQuery.isPending,
+      areasQuery.isSuccess,
+      categoriesQuery.error,
+      categoriesQuery.isError,
+      categoriesQuery.isPending,
+      categoriesQuery.isSuccess,
+      categoryChips,
+      clearBrowse,
+      mode,
+      onRetryAreas,
+      onRetryCategories,
+      resultsTitle,
+      selectArea,
+      selectCategory,
+      selectedArea,
+      selectedCategory,
+    ],
+  )
+
+  const listEmpty = useMemo(() => {
+    if (mode === "browse") {
+      return (
+        <ExploreEmpty
+          icon={Search}
+          title="Start exploring"
+          message="Search by name or choose a category or cuisine to get started."
+        />
+      )
+    }
+
+    if (isResultsLoading) {
+      return <RecipeResultsSkeleton />
+    }
+
+    if (resultsQuery?.isError) {
+      return <ExploreError error={resultsQuery.error} onRetry={onRetryResults} label={errorLabel} />
+    }
+
+    return <ExploreEmpty title="No recipes found" message={emptyMessage} />
+  }, [emptyMessage, errorLabel, isResultsLoading, mode, onRetryResults, resultsQuery?.error, resultsQuery?.isError])
+
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-background dark:bg-background-dark"
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={{ paddingTop: insets.top }}
+      style={{ paddingTop: topInset }}
     >
+      <View style={{ paddingHorizontal: spacing.lg }}>
+        <ScreenHeader title="Explore" subtitle="Search by name, or browse by category and cuisine" />
+        <View className="mt-lg">
+          <SearchInput
+            value={searchInput}
+            onChangeText={setSearchInput}
+            onSubmit={submitSearch}
+            onClear={clearSearch}
+          />
+        </View>
+      </View>
+
       <FlashList
+        style={{ flex: 1 }}
         data={mode === "browse" ? [] : recipes}
         numColumns={2}
         keyExtractor={(item) => item.id}
@@ -101,117 +300,10 @@ export function ExploreScreen({ category, area }: ExploreScreenProps) {
         onRefresh={mode === "browse" ? undefined : onRefresh}
         contentContainerStyle={{
           paddingHorizontal: spacing.lg,
-          paddingBottom: spacing["2xl"],
+          paddingBottom: contentPaddingBottom,
         }}
-        ListHeaderComponent={
-          <View className="pb-xl">
-            <View className="min-h-[44px] flex-row items-center">
-              <View className="h-11 w-11 items-center justify-center rounded-xl bg-primary dark:bg-primary-dark">
-                <Compass color={palette.primaryForeground} size={22} />
-              </View>
-              <View className="ml-md flex-1">
-                <Text className="text-xl font-bold text-foreground dark:text-foreground-dark">Explore</Text>
-                <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">
-                  Search or browse recipes
-                </Text>
-              </View>
-            </View>
-
-            <View className="mt-xl">
-              <SearchField
-                value={searchInput}
-                onChangeText={setSearchInput}
-                onSubmit={submitSearch}
-                onClear={clearSearch}
-              />
-            </View>
-
-            <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
-              Categories
-            </Text>
-            {categoriesQuery.isPending ? <FilterChipsSkeleton label="Loading categories" /> : null}
-            {categoriesQuery.isError ? (
-              <ExploreError
-                error={categoriesQuery.error}
-                onRetry={() => {
-                  void categoriesQuery.refetch()
-                }}
-                label="Could not load categories"
-              />
-            ) : null}
-            {categoriesQuery.isSuccess && categoryChips.length > 0 ? (
-              <FilterChipRow
-                chips={categoryChips}
-                selectedId={selectedCategory}
-                onSelect={selectCategory}
-                accessibilityLabel="Recipe categories"
-              />
-            ) : null}
-            {categoriesQuery.isSuccess && categoryChips.length === 0 ? (
-              <ExploreEmpty message="No recipe categories are available." />
-            ) : null}
-
-            <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
-              Cuisines
-            </Text>
-            {areasQuery.isPending ? <FilterChipsSkeleton label="Loading cuisines" /> : null}
-            {areasQuery.isError ? (
-              <ExploreError
-                error={areasQuery.error}
-                onRetry={() => {
-                  void areasQuery.refetch()
-                }}
-                label="Could not load cuisines"
-              />
-            ) : null}
-            {areasQuery.isSuccess && areaChips.length > 0 ? (
-              <FilterChipRow
-                chips={areaChips}
-                selectedId={selectedArea}
-                onSelect={selectArea}
-                accessibilityLabel="Recipe cuisines"
-              />
-            ) : null}
-            {areasQuery.isSuccess && areaChips.length === 0 ? (
-              <ExploreEmpty message="No recipe cuisines are available." />
-            ) : null}
-
-            {mode !== "browse" ? (
-              <View className="mt-xl flex-row items-center justify-between">
-                <Text className="flex-1 text-lg font-semibold text-foreground dark:text-foreground-dark">
-                  {resultsTitle}
-                </Text>
-                {mode === "category" || mode === "area" ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Clear filter"
-                    onPress={clearBrowse}
-                    className="min-h-[44px] items-center justify-center px-sm"
-                  >
-                    <Text className="text-sm font-medium text-primary dark:text-primary-dark">Clear</Text>
-                  </Pressable>
-                ) : null}
-              </View>
-            ) : null}
-          </View>
-        }
-        ListEmptyComponent={
-          mode === "browse" ? (
-            <ExploreEmpty message="Search by name or choose a category or cuisine to get started." />
-          ) : isResultsLoading ? (
-            <RecipeResultsSkeleton />
-          ) : resultsQuery?.isError ? (
-            <ExploreError
-              error={resultsQuery.error}
-              onRetry={() => {
-                void resultsQuery.refetch()
-              }}
-              label={errorLabel}
-            />
-          ) : (
-            <ExploreEmpty message={emptyMessage} />
-          )
-        }
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={listEmpty}
       />
     </KeyboardAvoidingView>
   )

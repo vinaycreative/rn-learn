@@ -1,7 +1,9 @@
 import { Link } from "expo-router"
-import { Pressable, ScrollView, Text } from "react-native"
+import { ScrollView, View } from "react-native"
 
 import { RecipeImage } from "@/components/recipe-image"
+import { AppText } from "@/components/ui/app-text"
+import { PressableScale } from "@/components/ui/pressable-scale"
 import { spacing } from "@/constants/theme"
 import type { RecipeCategory } from "@/data/recipes"
 
@@ -19,24 +21,24 @@ export function CategoryRow({ categories }: CategoryRowProps) {
     >
       {categories.map((category) => (
         <Link key={category.id} href={`/explore?category=${encodeURIComponent(category.name)}`} asChild>
-          <Pressable
+          <PressableScale
             accessibilityRole="link"
             accessibilityLabel={`${category.name} category`}
-            className="mr-md w-[88px] items-center"
+            className="mr-lg w-[88px] items-center"
           >
-            <RecipeImage
-              uri={category.imageUrl}
-              recyclingKey={category.id}
-              accessibilityLabel={`${category.name} category`}
-              className="h-[72px] w-[72px] rounded-xl"
-            />
-            <Text
-              numberOfLines={2}
-              className="mt-xs min-h-[32px] text-center text-xs font-medium text-foreground dark:text-foreground-dark"
-            >
+            <View className="h-[72px] w-[72px] overflow-hidden rounded-full">
+              <RecipeImage
+                uri={category.imageUrl}
+                recyclingKey={category.id}
+                variant="preview"
+                accessibilityLabel={`${category.name} category`}
+                className="h-full w-full"
+              />
+            </View>
+            <AppText variant="caption" numberOfLines={2} className="mt-sm text-center">
               {category.name}
-            </Text>
-          </Pressable>
+            </AppText>
+          </PressableScale>
         </Link>
       ))}
     </ScrollView>

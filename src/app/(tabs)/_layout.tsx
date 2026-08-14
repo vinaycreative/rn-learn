@@ -1,19 +1,20 @@
 import { Tabs } from "expo-router"
 
-import { HapticTab } from "@/components/haptic-tab"
-import { IconSymbol } from "@/components/ui/icon-symbol"
-import { Colors } from "@/constants/theme"
-import { useColorScheme } from "@/hooks/use-color-scheme"
+import { BottomTabBar } from "@/components/bottom-tab-bar"
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
     <Tabs
+      tabBar={(props) => <BottomTabBar {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
+        tabBarStyle: {
+          position: "absolute",
+          backgroundColor: "transparent",
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
       }}
     >
       <Tabs.Screen
@@ -21,7 +22,6 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarAccessibilityLabel: "Home",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -29,7 +29,6 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarAccessibilityLabel: "Explore",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -37,7 +36,6 @@ export default function TabLayout() {
         options={{
           title: "Favorites",
           tabBarAccessibilityLabel: "Favorites",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="heart.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -45,7 +43,6 @@ export default function TabLayout() {
         options={{
           title: "Settings",
           tabBarAccessibilityLabel: "Settings",
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />
     </Tabs>

@@ -7,9 +7,20 @@ import { AppProviders } from "@/lib/providers"
 export default function RootLayout() {
   return (
     <AppProviders>
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor: "transparent" },
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="recipe/[id]" options={{ headerShown: false, title: "Recipe" }} />
+        <Stack.Screen
+          name="recipe/[id]"
+          options={{
+            headerShown: false,
+            title: "Recipe",
+            animation: "fade_from_bottom",
+          }}
+        />
       </Stack>
     </AppProviders>
   )

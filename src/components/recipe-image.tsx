@@ -16,49 +16,61 @@ type RecipeImageProps = {
   variant?: RecipeImageVariant
 }
 
+type ImageStatus = "loading" | "loaded" | "error"
+
 export function RecipeImage({
   uri,
   recyclingKey,
   className,
   accessibilityLabel,
   priority,
-  variant = "thumb",
+  variant = "card",
 }: RecipeImageProps) {
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
-  const [hasFailed, setHasFailed] = useState(false)
   const resolvedUri = toRecipeImageUri(uri, variant)
-  const shouldShowImage = Boolean(resolvedUri) && !hasFailed
+  const [status, setStatus] = useState<ImageStatus>(resolvedUri ? "loading" : "error")
   const imageLabel = accessibilityLabel ?? "Recipe photo"
 
   useEffect(() => {
-    setHasFailed(false)
+    setStatus(resolvedUri ? "loading" : "error")
   }, [resolvedUri, recyclingKey])
 
   return (
     <View className={`overflow-hidden bg-surface dark:bg-surface-dark ${className ?? ""}`}>
-      {shouldShowImage ? (
+      {status === "loading" ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          className="absolute inset-0 bg-surface dark:bg-surface-dark"
+        />
+      ) : null}
+
+      {status !== "error" && resolvedUri ? (
         <Image
-          source={{ uri: resolvedUri ?? undefined }}
+          source={{ uri: resolvedUri }}
           contentFit="cover"
           transition={200}
           recyclingKey={recyclingKey}
           priority={priority}
           cachePolicy="memory-disk"
-          onError={() => setHasFailed(true)}
+          onLoad={() => setStatus("loaded")}
+          onError={() => setStatus("error")}
           style={{ width: "100%", height: "100%" }}
           accessibilityLabel={imageLabel}
           accessibilityIgnoresInvertColors
         />
-      ) : (
+      ) : null}
+
+      {status === "error" ? (
         <View
-          className="flex-1 items-center justify-center"
+          className="absolute inset-0 items-center justify-center bg-surface dark:bg-surface-dark"
           accessibilityRole="image"
           accessibilityLabel={`${imageLabel} unavailable`}
         >
           <ImageOff color={palette.foregroundMuted} size={28} />
         </View>
-      )}
+      ) : null}
     </View>
   )
 }

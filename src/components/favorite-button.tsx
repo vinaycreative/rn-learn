@@ -1,8 +1,17 @@
 import { Heart } from "lucide-react-native"
-import { Pressable } from "react-native"
+import { useEffect, useRef } from "react"
+import { View } from "react-native"
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+} from "react-native-reanimated"
 
-import { colors } from "@/constants/theme"
+import { IconButton } from "@/components/ui/button"
+import { colors, iconStroke } from "@/constants/theme"
 import { useColorScheme } from "@/hooks/use-color-scheme"
+import { springs } from "@/lib/motion"
 import { selectIsFavorite, useFavoritesStore } from "@/stores/favorites-store"
 import { toSavedRecipeSummary, type SavedRecipeInput } from "@/stores/saved-recipe"
 
@@ -17,33 +26,46 @@ export function FavoriteButton({ recipe, variant = "plain" }: FavoriteButtonProp
   const isHydrated = useFavoritesStore((state) => state.isHydrated)
   const isFavorite = useFavoritesStore(selectIsFavorite(recipe.id))
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite)
+  const scale = useSharedValue(1)
+  const hasMounted = useRef(false)
 
-  const iconColor = variant === "overlay" ? "#FFFFFF" : palette.primary
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true
+      return
+    }
+
+    scale.value = withSequence(withSpring(1.18, springs.press), withSpring(1, springs.snappy))
+  }, [isFavorite, scale])
+
+  const iconColor = variant === "overlay" ? "#FFFFFF" : isFavorite ? palette.favorite : palette.foregroundMuted
+  const fill = isHydrated && isFavorite ? iconColor : "transparent"
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={
-        isHydrated
-          ? isFavorite
-            ? `Remove ${recipe.name} from favorites`
-            : `Add ${recipe.name} to favorites`
-          : "Loading favorite state"
-      }
-      accessibilityState={isHydrated ? { selected: isFavorite } : undefined}
-      disabled={!isHydrated}
-      hitSlop={8}
-      onPress={() => {
-        toggleFavorite(toSavedRecipeSummary(recipe))
-      }}
-      className={
-        variant === "overlay"
-          ? "h-11 w-11 items-center justify-center rounded-full bg-black/50"
-          : "h-11 w-11 items-center justify-center"
-      }
-      style={{ opacity: isHydrated ? 1 : 0 }}
-    >
-      <Heart color={iconColor} size={22} fill={isHydrated && isFavorite ? iconColor : "transparent"} />
-    </Pressable>
+    <View style={{ opacity: isHydrated ? 1 : 0 }} pointerEvents={isHydrated ? "auto" : "none"}>
+      <IconButton
+        accessibilityLabel={
+          isHydrated
+            ? isFavorite
+              ? `Remove ${recipe.name} from favorites`
+              : `Add ${recipe.name} to favorites`
+            : "Loading favorite state"
+        }
+        selected={isHydrated ? isFavorite : undefined}
+        disabled={!isHydrated}
+        variant={variant === "overlay" ? "overlay" : "ghost"}
+        onPress={() => {
+          toggleFavorite(toSavedRecipeSummary(recipe))
+        }}
+      >
+        <Animated.View style={animatedStyle}>
+          <Heart color={iconColor} size={22} strokeWidth={iconStroke} fill={fill} />
+        </Animated.View>
+      </IconButton>
+    </View>
   )
 }

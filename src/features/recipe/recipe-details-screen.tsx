@@ -1,13 +1,11 @@
 import { router } from "expo-router"
 import { ArrowLeft } from "lucide-react-native"
-import { Pressable, ScrollView, View } from "react-native"
+import { ScrollView, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { colors } from "@/constants/theme"
-import { RecipeHero } from "@/features/recipe/recipe-hero"
-import { RecipeIngredients } from "@/features/recipe/recipe-ingredients"
-import { RecipeInstructions } from "@/features/recipe/recipe-instructions"
-import { RecipeOptionalInfo } from "@/features/recipe/recipe-optional-info"
+import { IconButton } from "@/components/ui/button"
+import { colors, iconStroke, spacing } from "@/constants/theme"
+import { RecipeContent } from "@/features/recipe/recipe-content"
 import { RecipeDetailsSkeleton, RecipeError, RecipeMissing } from "@/features/recipe/recipe-states"
 import { useRecipeDetails } from "@/features/recipe/use-recipe-details"
 import { useColorScheme } from "@/hooks/use-color-scheme"
@@ -34,65 +32,59 @@ export function RecipeDetailsScreen({ recipeId }: RecipeDetailsScreenProps) {
 
   return (
     <View className="flex-1 bg-background dark:bg-background-dark">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
-        showsVerticalScrollIndicator={false}
-      >
-        {isLoading ? (
-          <View>
-            <RecipeDetailsSkeleton />
-            <View className="absolute left-0 px-lg" style={{ top: insets.top + 8 }}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Go back"
-                onPress={goBack}
-                className="h-11 w-11 items-center justify-center rounded-full bg-surface dark:bg-surface-dark"
-              >
-                <ArrowLeft color={palette.foreground} size={22} />
-              </Pressable>
-            </View>
+      {isLoading ? (
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: insets.bottom + spacing["3xl"] }}
+          showsVerticalScrollIndicator={false}
+        >
+          <RecipeDetailsSkeleton />
+          <View className="absolute left-0 px-lg" style={{ top: insets.top + 8 }}>
+            <IconButton accessibilityLabel="Go back" onPress={goBack}>
+              <ArrowLeft color={palette.foreground} size={22} strokeWidth={iconStroke} />
+            </IconButton>
           </View>
-        ) : null}
+        </ScrollView>
+      ) : null}
 
-        {isMissing && !isLoading ? (
-          <View>
-            <StateBackButton onPress={goBack} color={palette.foreground} topInset={insets.top} />
-            <View className="px-lg">
-              <RecipeMissing />
-            </View>
+      {isMissing && !isLoading ? (
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: insets.bottom + spacing["3xl"] }}
+        >
+          <StateBackButton onPress={goBack} color={palette.foreground} topInset={insets.top} />
+          <View className="px-xl">
+            <RecipeMissing />
           </View>
-        ) : null}
+        </ScrollView>
+      ) : null}
 
-        {isError ? (
-          <View>
-            <StateBackButton onPress={goBack} color={palette.foreground} topInset={insets.top} />
-            <View className="px-lg">
-              <RecipeError
-                error={error}
-                onRetry={() => {
-                  void refetch()
-                }}
-              />
-            </View>
-          </View>
-        ) : null}
-
-        {recipe ? (
-          <View>
-            <RecipeHero
-              recipe={recipe}
-              isFavorite={isFavorite}
-              isFavoriteReady={isFavoriteReady}
-              onFavoritePress={onFavoritePress}
-              onBack={goBack}
+      {isError ? (
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: insets.bottom + spacing["3xl"] }}
+        >
+          <StateBackButton onPress={goBack} color={palette.foreground} topInset={insets.top} />
+          <View className="px-xl">
+            <RecipeError
+              error={error}
+              onRetry={() => {
+                void refetch()
+              }}
             />
-            <RecipeIngredients ingredients={recipe.ingredients} />
-            <RecipeInstructions instructions={recipe.instructions} />
-            <RecipeOptionalInfo recipe={recipe} />
           </View>
-        ) : null}
-      </ScrollView>
+        </ScrollView>
+      ) : null}
+
+      {recipe ? (
+        <RecipeContent
+          recipe={recipe}
+          isFavorite={isFavorite}
+          isFavoriteReady={isFavoriteReady}
+          onFavoritePress={onFavoritePress}
+          onBack={goBack}
+        />
+      ) : null}
     </View>
   )
 }
@@ -117,14 +109,9 @@ function StateBackButton({
 }) {
   return (
     <View className="px-lg pb-lg" style={{ paddingTop: topInset + 8 }}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Go back"
-        onPress={onPress}
-        className="h-11 w-11 items-center justify-center rounded-full bg-surface dark:bg-surface-dark"
-      >
-        <ArrowLeft color={color} size={22} />
-      </Pressable>
+      <IconButton accessibilityLabel="Go back" onPress={onPress}>
+        <ArrowLeft color={color} size={22} strokeWidth={iconStroke} />
+      </IconButton>
     </View>
   )
 }

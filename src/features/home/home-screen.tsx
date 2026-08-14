@@ -1,14 +1,15 @@
 import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { useCallback } from "react"
-import { Text, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-
+import { useCallback, useMemo } from "react"
+import { View } from "react-native"
+import { useBottomTabBarLayout } from "@/components/bottom-tab-bar"
 import { RecipeCard } from "@/components/recipe-card"
+import { SectionHeader, SECTION_GAP_CLASS, LIST_HEADER_PADDING_CLASS } from "@/components/ui/section-header"
 import { spacing } from "@/constants/theme"
 import type { RecipeSummary } from "@/data/recipes"
 import { CategoryRow } from "@/features/home/category-row"
-import { FeaturedRecipeCard } from "@/features/home/featured-recipe-card"
+import { FeaturedRecipeCard } from "@/components/featured-recipe-card"
 import { HomeHeader } from "@/features/home/home-header"
+import { RecentlyViewedSection } from "@/features/home/recently-viewed-section"
 import {
   CategorySkeletonRow,
   FeaturedSkeleton,
@@ -16,14 +17,22 @@ import {
   SectionEmpty,
   SectionError,
 } from "@/features/home/section-state"
-import { RecentlyViewedSection } from "@/features/home/recently-viewed-section"
 import { useHomeDiscovery } from "@/features/home/use-home-discovery"
 
+const EXCLUDED_HOME_CATEGORIES = new Set(["beef", "chicken"])
+
 export function HomeScreen() {
-  const insets = useSafeAreaInsets()
+  const { topInset, contentPaddingBottom } = useBottomTabBarLayout()
   const { featuredQuery, categoriesQuery, popularQuery, discoveryCategory } = useHomeDiscovery()
 
   const recipes = popularQuery.data ?? []
+  const homeCategories = useMemo(
+    () =>
+      (categoriesQuery.data ?? []).filter(
+        (category) => !EXCLUDED_HOME_CATEGORIES.has(category.name.trim().toLowerCase()),
+      ),
+    [categoriesQuery.data],
+  )
   const isRefreshing =
     featuredQuery.isRefetching || categoriesQuery.isRefetching || popularQuery.isRefetching
 
@@ -48,7 +57,7 @@ export function HomeScreen() {
   return (
     <View
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ paddingTop: insets.top }}
+      style={{ paddingTop: topInset }}
     >
       <FlashList
         data={recipes}
@@ -66,15 +75,15 @@ export function HomeScreen() {
         onRefresh={onRefresh}
         contentContainerStyle={{
           paddingHorizontal: spacing.lg,
-          paddingBottom: spacing["2xl"],
+          paddingBottom: contentPaddingBottom,
         }}
         ListHeaderComponent={
-          <View className="pb-xl">
+          <View className={LIST_HEADER_PADDING_CLASS}>
             <HomeHeader onShuffle={onShuffle} isShuffling={featuredQuery.isFetching} />
 
-            <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
-              Featured
-            </Text>
+            <View className={SECTION_GAP_CLASS}>
+              <SectionHeader title="Featured" />
+            </View>
             {featuredQuery.isPending ? <FeaturedSkeleton /> : null}
             {featuredQuery.isError ? (
               <SectionError
@@ -94,9 +103,9 @@ export function HomeScreen() {
 
             <RecentlyViewedSection />
 
-            <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
-              Categories
-            </Text>
+            <View className={SECTION_GAP_CLASS}>
+              <SectionHeader title="Categories" />
+            </View>
             {categoriesQuery.isPending ? <CategorySkeletonRow /> : null}
             {categoriesQuery.isError ? (
               <SectionError
@@ -107,16 +116,18 @@ export function HomeScreen() {
                 label="Could not load categories"
               />
             ) : null}
-            {categoriesQuery.isSuccess && categoriesQuery.data.length > 0 ? (
-              <CategoryRow categories={categoriesQuery.data} />
+            {categoriesQuery.isSuccess && homeCategories.length > 0 ? (
+              <CategoryRow categories={homeCategories} />
             ) : null}
-            {categoriesQuery.isSuccess && categoriesQuery.data.length === 0 ? (
+            {categoriesQuery.isSuccess && homeCategories.length === 0 ? (
               <SectionEmpty message="No recipe categories are available." />
             ) : null}
 
-            <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
-              {discoveryCategory ? `Popular in ${discoveryCategory}` : "Popular recipes"}
-            </Text>
+            <View className={SECTION_GAP_CLASS}>
+              <SectionHeader
+                title={discoveryCategory ? `Popular in ${discoveryCategory}` : "Trending now"}
+              />
+            </View>
           </View>
         }
         ListEmptyComponent={

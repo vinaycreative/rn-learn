@@ -1,4 +1,6 @@
-import { Text, View } from "react-native"
+import { AppText } from "@/components/ui/app-text"
+import { InstructionStep } from "@/features/recipe/instruction-step"
+import { View } from "react-native"
 
 type RecipeInstructionsProps = {
   instructions: string | null
@@ -8,24 +10,20 @@ export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
   const steps = splitInstructionBlocks(instructions)
 
   if (steps.length === 0) {
-    return null
+    return (
+      <View className="px-xl pt-md">
+        <AppText variant="body" tone="muted">
+          No instructions listed for this recipe.
+        </AppText>
+      </View>
+    )
   }
 
   return (
-    <View className="mt-xl px-lg">
-      <Text className="text-lg font-semibold text-foreground dark:text-foreground-dark">Instructions</Text>
-      <View className="mt-md">
-        {steps.map((step, index) => (
-          <View key={`${index}-${step.slice(0, 24)}`} className={index === 0 ? "" : "mt-lg"}>
-            {steps.length > 1 ? (
-              <Text className="mb-xs text-xs font-semibold uppercase tracking-wide text-primary dark:text-primary-dark">
-                Step {index + 1}
-              </Text>
-            ) : null}
-            <Text className="text-base leading-relaxed text-foreground dark:text-foreground-dark">{step}</Text>
-          </View>
-        ))}
-      </View>
+    <View className="gap-lg px-xl pt-md">
+      {steps.map((step, index) => (
+        <InstructionStep key={`${index}-${step.slice(0, 24)}`} stepNumber={index + 1} text={step} />
+      ))}
     </View>
   )
 }

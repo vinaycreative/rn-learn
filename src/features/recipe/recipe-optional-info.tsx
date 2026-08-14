@@ -1,8 +1,12 @@
 import { ExternalLink as ExternalLinkIcon, Play } from "lucide-react-native"
-import { Text, View } from "react-native"
+import { View } from "react-native"
 
 import { ExternalLink, isSafeExternalUrl } from "@/components/external-link"
-import { colors } from "@/constants/theme"
+import { AppText } from "@/components/ui/app-text"
+import { TagChip } from "@/components/ui/chip"
+import { SECTION_GAP_CLASS } from "@/components/ui/section-header"
+import { Surface } from "@/components/ui/surface"
+import { colors, iconStroke } from "@/constants/theme"
 import type { Recipe } from "@/data/recipes"
 import { useColorScheme } from "@/hooks/use-color-scheme"
 
@@ -24,35 +28,33 @@ export function RecipeOptionalInfo({ recipe }: RecipeOptionalInfoProps) {
   }
 
   return (
-    <View className="mt-xl px-lg">
+    <View className={`${SECTION_GAP_CLASS} px-xl`}>
       {hasTags ? (
         <View>
-          <Text className="text-lg font-semibold text-foreground dark:text-foreground-dark">Tags</Text>
+          <AppText variant="label">Tags</AppText>
           <View className="mt-md flex-row flex-wrap gap-sm">
             {tags.map((tag) => (
-              <View key={tag} className="rounded-full bg-surface px-md py-sm dark:bg-surface-dark">
-                <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">{tag}</Text>
-              </View>
+              <TagChip key={tag} label={tag} />
             ))}
           </View>
         </View>
       ) : null}
 
       {hasLinks ? (
-        <View className={hasTags ? "mt-xl" : ""}>
-          <Text className="text-lg font-semibold text-foreground dark:text-foreground-dark">More</Text>
-          <View className="mt-md overflow-hidden rounded-xl bg-surface dark:bg-surface-dark">
+        <View className={hasTags ? SECTION_GAP_CLASS : ""}>
+          <AppText variant="label">More</AppText>
+          <Surface className="mt-md">
             {sourceUrl ? (
               <ExternalLink
                 href={sourceUrl}
                 accessibilityRole="link"
                 accessibilityLabel="Open recipe source"
-                className="min-h-[44px] flex-row items-center px-lg py-md"
+                className="min-h-[52px] flex-row items-center px-lg py-md"
               >
-                <ExternalLinkIcon color={palette.primary} size={20} />
-                <Text className="ml-md text-base font-medium text-primary dark:text-primary-dark">
+                <ExternalLinkIcon color={palette.primary} size={20} strokeWidth={iconStroke} />
+                <AppText variant="label" tone="primary" className="ml-md">
                   Recipe source
-                </Text>
+                </AppText>
               </ExternalLink>
             ) : null}
             {videoUrl ? (
@@ -60,15 +62,17 @@ export function RecipeOptionalInfo({ recipe }: RecipeOptionalInfoProps) {
                 href={videoUrl}
                 accessibilityRole="link"
                 accessibilityLabel="Open recipe video"
-                className={`min-h-[44px] flex-row items-center px-lg py-md ${
+                className={`min-h-[52px] flex-row items-center px-lg py-md ${
                   sourceUrl ? "border-t border-border dark:border-border-dark" : ""
                 }`}
               >
-                <Play color={palette.primary} size={20} />
-                <Text className="ml-md text-base font-medium text-primary dark:text-primary-dark">Watch video</Text>
+                <Play color={palette.primary} size={20} strokeWidth={iconStroke} />
+                <AppText variant="label" tone="primary" className="ml-md">
+                  Watch video
+                </AppText>
               </ExternalLink>
             ) : null}
-          </View>
+          </Surface>
         </View>
       ) : null}
     </View>

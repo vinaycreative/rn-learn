@@ -1,10 +1,12 @@
 import Constants from "expo-constants"
-import { Database, Heart, History, Settings } from "lucide-react-native"
+import { Database, Heart, History } from "lucide-react-native"
 import { useCallback, type ReactNode } from "react"
-import { Alert, Pressable, ScrollView, Text, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-
-import { colors, spacing } from "@/constants/theme"
+import { Alert, Pressable, ScrollView, View } from "react-native"
+import { useBottomTabBarLayout } from "@/components/bottom-tab-bar"
+import { AppText } from "@/components/ui/app-text"
+import { ScreenHeader, SECTION_GAP_CLASS } from "@/components/ui/section-header"
+import { Surface } from "@/components/ui/surface"
+import { colors, iconStroke, spacing } from "@/constants/theme"
 import { ThemePreferenceOptions } from "@/features/settings/theme-preference-options"
 import { useColorScheme } from "@/hooks/use-color-scheme"
 import { useFavoritesStore } from "@/stores/favorites-store"
@@ -15,7 +17,7 @@ const APP_NAME = "Recipe Explorer"
 const RECIPE_DATA_PROVIDER = "TheMealDB"
 
 export function SettingsScreen() {
-  const insets = useSafeAreaInsets()
+  const { topInset, contentPaddingBottom } = useBottomTabBarLayout()
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
   const isPreferencesHydrated = usePreferencesStore((state) => state.isHydrated)
@@ -32,84 +34,64 @@ export function SettingsScreen() {
   const canClearHistory = isHistoryHydrated && recentlyViewedCount > 0
 
   const onClearFavorites = useCallback(() => {
-    Alert.alert(
-      "Clear all favorites?",
-      "This removes every saved recipe from this device.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clear favorites",
-          style: "destructive",
-          onPress: () => {
-            clearFavorites()
-          },
+    Alert.alert("Clear all favorites?", "This removes every saved recipe from this device.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Clear favorites",
+        style: "destructive",
+        onPress: () => {
+          clearFavorites()
         },
-      ],
-    )
+      },
+    ])
   }, [clearFavorites])
 
   const onClearRecentlyViewed = useCallback(() => {
-    Alert.alert(
-      "Clear recently viewed?",
-      "This removes your local recipe history from this device.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clear history",
-          style: "destructive",
-          onPress: () => {
-            clearHistory()
-          },
+    Alert.alert("Clear recently viewed?", "This removes your local recipe history from this device.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Clear history",
+        style: "destructive",
+        onPress: () => {
+          clearHistory()
         },
-      ],
-    )
+      },
+    ])
   }, [clearHistory])
 
   return (
     <View
       className="flex-1 bg-background dark:bg-background-dark"
-      style={{ paddingTop: insets.top }}
+      style={{ paddingTop: topInset }}
     >
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: spacing.lg,
-          paddingBottom: spacing["2xl"],
+          paddingBottom: contentPaddingBottom,
         }}
       >
-        <View className="min-h-[44px] flex-row items-center pb-xl">
-          <View className="h-11 w-11 items-center justify-center rounded-xl bg-primary dark:bg-primary-dark">
-            <Settings color={palette.primaryForeground} size={22} />
-          </View>
-          <View className="ml-md flex-1">
-            <Text className="text-xl font-bold text-foreground dark:text-foreground-dark">
-              Settings
-            </Text>
-            <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">
-              Preferences and local data
-            </Text>
-          </View>
-        </View>
+        <ScreenHeader title="Settings" subtitle="Appearance, local data, and about" />
 
-        <Text className="mb-md text-lg font-semibold text-foreground dark:text-foreground-dark">
+        <AppText variant="label" tone="muted" className="mb-sm mt-lg uppercase tracking-widest">
           Appearance
-        </Text>
+        </AppText>
         <ThemePreferenceOptions
           value={themePreference}
           onChange={setThemePreference}
           disabled={!isPreferencesHydrated}
         />
-        <Text className="mt-sm text-sm text-foreground-muted dark:text-foreground-muted-dark">
+        <AppText variant="caption" tone="muted" className="mt-sm">
           {isPreferencesHydrated
             ? "System follows this device. Light and dark stay fixed."
             : "Loading saved appearance"}
-        </Text>
+        </AppText>
 
-        <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
+        <AppText variant="label" tone="muted" className={`mb-sm ${SECTION_GAP_CLASS} uppercase tracking-widest`}>
           Local data
-        </Text>
-        <View className="overflow-hidden rounded-xl bg-surface dark:bg-surface-dark">
+        </AppText>
+        <Surface>
           <SettingsActionRow
-            icon={<Heart color={palette.error} size={20} />}
+            icon={<Heart color={palette.error} size={20} strokeWidth={iconStroke} />}
             label="Clear favorites"
             detail={
               isFavoritesHydrated
@@ -123,7 +105,7 @@ export function SettingsScreen() {
           />
           <View className="border-t border-border dark:border-border-dark" />
           <SettingsActionRow
-            icon={<History color={palette.error} size={20} />}
+            icon={<History color={palette.error} size={20} strokeWidth={iconStroke} />}
             label="Clear recently viewed"
             detail={
               isHistoryHydrated
@@ -135,28 +117,28 @@ export function SettingsScreen() {
             disabled={!canClearHistory}
             onPress={onClearRecentlyViewed}
           />
-        </View>
+        </Surface>
 
-        <Text className="mb-md mt-xl text-lg font-semibold text-foreground dark:text-foreground-dark">
+        <AppText variant="label" tone="muted" className={`mb-sm ${SECTION_GAP_CLASS} uppercase tracking-widest`}>
           About
-        </Text>
-        <View className="overflow-hidden rounded-xl bg-surface dark:bg-surface-dark">
+        </AppText>
+        <Surface>
           <AboutRow label="App" value={APP_NAME} />
           <View className="border-t border-border dark:border-border-dark" />
           <AboutRow label="Version" value={appVersion} />
           <View className="border-t border-border dark:border-border-dark" />
-          <View className="min-h-[44px] flex-row items-center px-lg py-md">
-            <Database color={palette.foregroundMuted} size={20} />
+          <View className="min-h-[52px] flex-row items-center px-lg py-md">
+            <Database color={palette.foregroundMuted} size={20} strokeWidth={iconStroke} />
             <View className="ml-md flex-1">
-              <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">
+              <AppText variant="caption" tone="muted">
                 Recipe data
-              </Text>
-              <Text className="text-base font-medium text-foreground dark:text-foreground-dark">
+              </AppText>
+              <AppText variant="label" className="mt-xs">
                 {RECIPE_DATA_PROVIDER}
-              </Text>
+              </AppText>
             </View>
           </View>
-        </View>
+        </Surface>
       </ScrollView>
     </View>
   )
@@ -179,12 +161,16 @@ function SettingsActionRow({ icon, label, detail, disabled, onPress }: SettingsA
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
-      className={`min-h-[44px] flex-row items-center px-lg py-md ${disabled ? "opacity-50" : ""}`}
+      className={`min-h-[52px] flex-row items-center px-lg py-md ${disabled ? "opacity-50" : ""}`}
     >
       {icon}
       <View className="ml-md flex-1">
-        <Text className="text-base font-medium text-error dark:text-error-dark">{label}</Text>
-        <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">{detail}</Text>
+        <AppText variant="label" tone="error">
+          {label}
+        </AppText>
+        <AppText variant="caption" tone="muted" className="mt-xs">
+          {detail}
+        </AppText>
       </View>
     </Pressable>
   )
@@ -197,9 +183,13 @@ type AboutRowProps = {
 
 function AboutRow({ label, value }: AboutRowProps) {
   return (
-    <View className="min-h-[44px] justify-center px-lg py-md">
-      <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">{label}</Text>
-      <Text className="text-base font-medium text-foreground dark:text-foreground-dark">{value}</Text>
+    <View className="min-h-[52px] justify-center px-lg py-md">
+      <AppText variant="caption" tone="muted">
+        {label}
+      </AppText>
+      <AppText variant="label" className="mt-xs">
+        {value}
+      </AppText>
     </View>
   )
 }

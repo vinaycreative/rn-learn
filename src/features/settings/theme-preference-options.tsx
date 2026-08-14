@@ -1,8 +1,12 @@
 import { Monitor, Moon, Sun } from "lucide-react-native"
-import { Pressable, Text, View } from "react-native"
+import { useEffect } from "react"
+import { Pressable, View } from "react-native"
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
 
-import { colors } from "@/constants/theme"
+import { AppText } from "@/components/ui/app-text"
+import { colors, iconStroke } from "@/constants/theme"
 import { useColorScheme } from "@/hooks/use-color-scheme"
+import { springs } from "@/lib/motion"
 import { THEME_PREFERENCES, type ThemePreference } from "@/stores/preferences-store"
 
 const THEME_OPTION_META: Record<
@@ -39,9 +43,36 @@ export function ThemePreferenceOptions({
 }: ThemePreferenceOptionsProps) {
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
+  const selectedIndex = THEME_PREFERENCES.indexOf(value)
+  const trackWidth = useSharedValue(0)
+  const index = useSharedValue(Math.max(selectedIndex, 0))
+
+  useEffect(() => {
+    index.value = withSpring(Math.max(selectedIndex, 0), springs.snappy)
+  }, [index, selectedIndex])
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    const width = trackWidth.value / THEME_PREFERENCES.length
+
+    return {
+      width,
+      transform: [{ translateX: index.value * width }],
+    }
+  })
 
   return (
-    <View accessibilityLabel="Appearance" className="flex-row gap-sm">
+    <View
+      accessibilityLabel="Appearance"
+      className="relative flex-row rounded-2xl bg-surface p-xs dark:bg-surface-dark"
+      onLayout={(event) => {
+        trackWidth.value = event.nativeEvent.layout.width - 8
+      }}
+    >
+      <Animated.View
+        pointerEvents="none"
+        style={indicatorStyle}
+        className="absolute bottom-xs top-xs rounded-xl bg-primary dark:bg-primary-dark"
+      />
       {THEME_PREFERENCES.map((preference) => {
         const { label, accessibilityLabel, Icon } = THEME_OPTION_META[preference]
         const isSelected = preference === value
@@ -54,25 +85,16 @@ export function ThemePreferenceOptions({
             accessibilityState={{ selected: isSelected, disabled }}
             disabled={disabled}
             onPress={() => onChange(preference)}
-            className={`min-h-[44px] flex-1 items-center justify-center rounded-xl px-sm py-md ${
-              isSelected
-                ? "bg-primary dark:bg-primary-dark"
-                : "bg-surface dark:bg-surface-dark"
-            }`}
+            className="z-10 min-h-[72px] flex-1 items-center justify-center px-sm py-md"
           >
             <Icon
               color={isSelected ? palette.primaryForeground : palette.foregroundMuted}
               size={20}
+              strokeWidth={iconStroke}
             />
-            <Text
-              className={`mt-xs text-sm font-medium ${
-                isSelected
-                  ? "text-primary-foreground dark:text-primary-foreground-dark"
-                  : "text-foreground dark:text-foreground-dark"
-              }`}
-            >
+            <AppText variant="label" tone={isSelected ? "onPrimary" : "default"} className="mt-xs">
               {label}
-            </Text>
+            </AppText>
           </Pressable>
         )
       })}

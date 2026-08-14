@@ -1,99 +1,70 @@
----
+## Current Design Direction
 
-# 14. `docs/DESIGN.md`
+The current UI implementation follows the redesign specification in:
 
-This is our actual UI/UX source of truth.
+`docs/REDESIGN.md`
 
-```md
-# Design System
+Visual reference:
 
-## Design Direction
+`docs/ui-reference.png`
 
-Recipe Explorer uses a clean, modern, content-focused mobile interface.
-
-The design prioritizes:
-
-- recipe imagery
-- readable information hierarchy
-- fast scanning
-- simple navigation
-- clear actions
-- minimal visual noise
+`REDESIGN.md` is the source of truth for the current visual redesign.
 
 ---
 
-# Design Principles
+## Design Tokens
 
-## Content First
+All visual constants are centralized in:
 
-Recipe imagery and recipe information are the primary visual elements.
+- `src/constants/theme.tokens.js` — canonical token values
+- `src/constants/theme.ts` — typed exports and typography presets
+- `tailwind.config.js` — NativeWind/Tailwind mirror of the same tokens
 
-## Clear Hierarchy
+### Colors
 
-Users should immediately understand:
+| Token | Light | Usage |
+| --- | --- | --- |
+| `background` | `#F8F8F3` | Warm off-white screen background |
+| `surface` | `#E6EEDC` | Soft sage secondary surfaces |
+| `surfaceElevated` | `#FFFFFF` | White cards and inputs |
+| `foreground` | `#20251D` | Near-black primary text |
+| `foregroundMuted` | `#6F756B` | Muted gray-green secondary text |
+| `primary` | `#304C24` | Deep forest green actions and accents |
+| `error` | `#B42318` | Destructive actions |
 
-1. what content they are viewing
-2. what action is available
-3. what information is most important
+### Typography
 
-## Consistency
+Primary UI font: **Plus Jakarta Sans**
 
-Repeated patterns must use shared components and design tokens.
+Editorial headings (`AppText` `display` variant): **Playfair Display**
 
-## Feedback
+| Role | Size | Variant |
+| --- | --- | --- |
+| Screen title | 34px | `display` |
+| Section title | 26px | `title` |
+| Card title | 18px | `subtitle` |
+| Body | 16px | `body` |
+| Metadata | 14px | `caption` |
+| Button | 16px medium | `label` |
 
-Every asynchronous or interactive operation should communicate its state.
+Use `AppText` variants instead of one-off font sizes.
 
----
+### Spacing
 
-# Styling
+4px-based scale: `xs` (4), `sm` (8), `md` (12), `lg` (16), `xl` (24), `2xl` (32), `3xl` (48).
 
-NativeWind is the primary styling system.
+### Radius
 
-Tailwind utility classes should be used for standard layout and visual styling.
+Semantic radii include `card` (24px) and `full` for pills.
 
-React Native `StyleSheet` may be used when:
+### Icons
 
-- a third-party library requires it
-- dynamic styles are clearer
-- an API does not support NativeWind
-- there is a measured performance reason
+Sizes: `xs` 16, `sm` 20, `md` 22, `lg` 24, `xl` 28. Stroke width: `1.75`.
 
----
+### Component Heights
 
-# Design Tokens
+`sm` 44, `md` 52, `lg` 56, `tab` 48, `tabBar` 64. Tailwind classes: `min-h-component-md`, etc.
 
-Tokens should be centralized rather than repeated throughout components.
+### Shadows
 
-Token categories:
-
-- colors
-- typography
-- spacing
-- radius
-- shadows
-- animation durations
-
-The implementation source of truth for tokens should live in the application's theme configuration.
-
----
-
-# Color System
-
-The application should define semantic colors rather than hard-coded component colors.
-
-Example semantic roles:
-
-```text
-background
-surface
-surfaceElevated
-foreground
-foregroundMuted
-primary
-primaryForeground
-border
-success
-warning
-error
-```
+`shadows.sm`, `shadows.md`, `shadows.lg` in `theme.ts` for raised surfaces.

@@ -1,7 +1,12 @@
-import { ChefHat, Shuffle } from "lucide-react-native"
-import { ActivityIndicator, Pressable, Text, View } from "react-native"
+import { Link } from "expo-router"
+import { Search, Shuffle } from "lucide-react-native"
+import { ActivityIndicator, View } from "react-native"
 
-import { colors } from "@/constants/theme"
+import { AppText } from "@/components/ui/app-text"
+import { IconButton } from "@/components/ui/button"
+import { PressableScale } from "@/components/ui/pressable-scale"
+import { SURFACE_BORDER_CLASS } from "@/components/ui/surface"
+import { colors, iconStroke } from "@/constants/theme"
 import { useColorScheme } from "@/hooks/use-color-scheme"
 
 type HomeHeaderProps = {
@@ -9,37 +14,63 @@ type HomeHeaderProps = {
   isShuffling: boolean
 }
 
+function getTimeGreeting(): string {
+  const hour = new Date().getHours()
+
+  if (hour < 12) {
+    return "Good morning"
+  }
+
+  if (hour < 17) {
+    return "Good afternoon"
+  }
+
+  return "Good evening"
+}
+
 export function HomeHeader({ onShuffle, isShuffling }: HomeHeaderProps) {
   const colorScheme = useColorScheme() ?? "light"
   const palette = colors[colorScheme]
 
   return (
-    <View className="flex-row items-center justify-between">
-      <View className="min-h-[44px] flex-1 flex-row items-center">
-        <View className="h-11 w-11 items-center justify-center rounded-xl bg-primary dark:bg-primary-dark">
-          <ChefHat color={palette.primaryForeground} size={22} />
+    <View>
+      <View className="min-h-[44px] flex-row items-center justify-between">
+        <View className="min-w-0 flex-1 pr-md">
+          <AppText variant="caption" tone="muted">
+            {getTimeGreeting()} 👋
+          </AppText>
+          <AppText variant="subtitle" className="mt-xs">
+            What are you cooking today?
+          </AppText>
         </View>
-        <View className="ml-md flex-1">
-          <Text className="text-xl font-bold text-foreground dark:text-foreground-dark">Recipe Explorer</Text>
-          <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">
-            Discover something delicious
-          </Text>
-        </View>
+        <IconButton
+          accessibilityLabel="Discover another recipe"
+          disabled={isShuffling}
+          busy={isShuffling}
+          fadeWhenDisabled={false}
+          onPress={onShuffle}
+        >
+          {isShuffling ? (
+            <ActivityIndicator color={palette.primary} />
+          ) : (
+            <Shuffle color={palette.primary} size={20} strokeWidth={iconStroke} />
+          )}
+        </IconButton>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Discover another recipe"
-        accessibilityState={{ busy: isShuffling, disabled: isShuffling }}
-        disabled={isShuffling}
-        onPress={onShuffle}
-        className="h-11 w-11 items-center justify-center rounded-xl bg-surface dark:bg-surface-dark"
-      >
-        {isShuffling ? (
-          <ActivityIndicator color={palette.primary} />
-        ) : (
-          <Shuffle color={palette.primary} size={22} />
-        )}
-      </Pressable>
+
+      <Link href="/explore" asChild>
+        <PressableScale
+          accessibilityRole="link"
+          accessibilityLabel="Search recipes"
+          accessibilityHint="Opens explore to search by name"
+          className={`mt-lg min-h-component-md flex-row items-center rounded-full bg-surface-elevated px-lg dark:bg-surface-elevated-dark ${SURFACE_BORDER_CLASS}`}
+        >
+          <Search color={palette.foregroundMuted} size={18} strokeWidth={iconStroke} />
+          <AppText variant="body" tone="muted" className="ml-md flex-1">
+            Search recipes
+          </AppText>
+        </PressableScale>
+      </Link>
     </View>
   )
 }
