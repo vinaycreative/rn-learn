@@ -29,12 +29,12 @@ export function FilterChipRow({ chips, selectedId, onSelect, accessibilityLabel 
         paddingRight: spacing.lg,
       }}
     >
-      {chips.map((chip, index) => {
+      {chips.map((chip) => {
         const isSelected = chip.id === selectedId
 
         return (
           <Pressable
-            key={`${chip.id}-${index}`}
+            key={chip.id}
             accessibilityRole="button"
             accessibilityLabel={chip.label}
             accessibilityState={{ selected: isSelected }}

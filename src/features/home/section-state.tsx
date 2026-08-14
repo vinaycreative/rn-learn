@@ -1,52 +1,7 @@
-import { isDataError } from "@/data/recipes"
-import { Pressable, Text, View } from "react-native"
+import { EmptyState, ErrorState } from "@/components/async-state"
+import { View } from "react-native"
 
-type SectionErrorProps = {
-  error: unknown
-  onRetry: () => void
-  label: string
-}
-
-export function getUserFacingErrorMessage(error: unknown): string {
-  if (isDataError(error)) {
-    return error.message
-  }
-
-  return "Something went wrong. Please try again."
-}
-
-export function SectionError({ error, onRetry, label }: SectionErrorProps) {
-  return (
-    <View className="items-start rounded-xl bg-surface px-lg py-lg dark:bg-surface-dark">
-      <Text className="text-sm font-medium text-error dark:text-error-dark">{label}</Text>
-      <Text className="mt-xs text-sm text-foreground-muted dark:text-foreground-muted-dark">
-        {getUserFacingErrorMessage(error)}
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Retry"
-        onPress={onRetry}
-        className="mt-md min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-primary px-lg dark:bg-primary-dark"
-      >
-        <Text className="text-sm font-semibold text-primary-foreground dark:text-primary-foreground-dark">
-          Retry
-        </Text>
-      </Pressable>
-    </View>
-  )
-}
-
-type SectionEmptyProps = {
-  message: string
-}
-
-export function SectionEmpty({ message }: SectionEmptyProps) {
-  return (
-    <View className="rounded-xl bg-surface px-lg py-lg dark:bg-surface-dark">
-      <Text className="text-sm text-foreground-muted dark:text-foreground-muted-dark">{message}</Text>
-    </View>
-  )
-}
+export { EmptyState as SectionEmpty, ErrorState as SectionError }
 
 export function FeaturedSkeleton() {
   return (

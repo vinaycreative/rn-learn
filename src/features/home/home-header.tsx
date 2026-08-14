@@ -29,6 +29,7 @@ export function HomeHeader({ onShuffle, isShuffling }: HomeHeaderProps) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Discover another recipe"
+        accessibilityState={{ busy: isShuffling, disabled: isShuffling }}
         disabled={isShuffling}
         onPress={onShuffle}
         className="h-11 w-11 items-center justify-center rounded-xl bg-surface dark:bg-surface-dark"

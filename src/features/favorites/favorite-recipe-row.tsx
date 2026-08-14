@@ -25,7 +25,12 @@ export function FavoriteRecipeRow({ recipe }: FavoriteRecipeRowProps) {
           className="min-h-[44px] min-w-0 flex-1 flex-row items-center"
         >
           <View className="h-24 w-24">
-            <RecipeImage uri={recipe.imageUrl} recyclingKey={recipe.id} className="h-full w-full" />
+            <RecipeImage
+              uri={recipe.imageUrl}
+              recyclingKey={recipe.id}
+              accessibilityLabel={`${recipe.name} photo`}
+              className="h-full w-full"
+            />
           </View>
           <View className="min-w-0 flex-1 px-md py-sm">
             <Text

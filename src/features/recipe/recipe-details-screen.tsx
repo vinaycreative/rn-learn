@@ -39,7 +39,21 @@ export function RecipeDetailsScreen({ recipeId }: RecipeDetailsScreenProps) {
         contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {isLoading ? <RecipeDetailsSkeleton /> : null}
+        {isLoading ? (
+          <View>
+            <RecipeDetailsSkeleton />
+            <View className="absolute left-0 px-lg" style={{ top: insets.top + 8 }}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+                onPress={goBack}
+                className="h-11 w-11 items-center justify-center rounded-full bg-surface dark:bg-surface-dark"
+              >
+                <ArrowLeft color={palette.foreground} size={22} />
+              </Pressable>
+            </View>
+          </View>
+        ) : null}
 
         {isMissing && !isLoading ? (
           <View>

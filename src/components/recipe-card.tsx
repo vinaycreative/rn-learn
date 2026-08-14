@@ -27,7 +27,12 @@ function RecipeCardComponent({ recipe, showFavorite = false }: RecipeCardProps) 
           style={shadows.sm}
           className="min-h-[44px] overflow-hidden rounded-xl border border-border bg-surface-elevated dark:border-border-dark dark:bg-surface-elevated-dark"
         >
-          <RecipeImage uri={recipe.imageUrl} recyclingKey={recipe.id} className="aspect-square w-full" />
+          <RecipeImage
+            uri={recipe.imageUrl}
+            recyclingKey={recipe.id}
+            accessibilityLabel={`${recipe.name} photo`}
+            className="aspect-square w-full"
+          />
           <View className="px-sm py-sm">
             <Text
               numberOfLines={2}

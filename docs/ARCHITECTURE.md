@@ -50,7 +50,7 @@ AsyncStorage
 
 ## Forms
 
-React Hook Form
+Local React state. No form library is required for the current search and settings flows.
 
 ## Validation
 

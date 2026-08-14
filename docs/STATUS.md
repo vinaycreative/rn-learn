@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-Feature implementation
+Quality and production-readiness
 
 ## Current Focus
 
-None. Settings is implemented.
+None. Feature implementation is complete. A production-readiness audit was completed on 2026-08-14.
 
 ---
 
@@ -34,6 +34,7 @@ None. Settings is implemented.
 - [x] Favorites (Zustand store, AsyncStorage persistence, Favorites tab, card/details actions)
 - [x] Recently viewed (Zustand store, persistence, Home section, details recording)
 - [x] Settings (theme preference, local data controls, about)
+- [x] Production-readiness audit (types, lint, query/store/list/image/a11y/error handling, focused tests)
 - [ ] Development build configured
 
 ---
@@ -52,7 +53,8 @@ None
 
 ## Known Issues
 
-None
+- No Expo development build has been configured yet. The app currently runs through Expo Go / `expo start`.
+- Theme preference is not exercised automatically in CI. Light, dark, and system appearance still need a device or simulator check after client changes.
 
 ---
 

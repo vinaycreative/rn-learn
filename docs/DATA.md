@@ -142,6 +142,10 @@ Shared TanStack Query hooks live in `src/data/recipes/hooks.ts`:
 
 Search, detail, category, and area hooks stay disabled until their required argument is non-empty.
 
+Catalog queries (categories and areas) use a 30-minute stale time. Featured random recipes use a 5-minute stale time; shuffle still forces a refetch.
+
+List thumbnails request TheMealDB `/preview` images at display time. Featured and recipe-detail heroes use the full image URL.
+
 ---
 
 # Client Persistence

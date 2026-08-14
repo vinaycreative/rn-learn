@@ -33,7 +33,7 @@ function createRecentlyViewed(recipe: SavedRecipeInput, viewedAt = Date.now()): 
   }
 }
 
-function normalizeRecentlyViewedState(value: unknown): PersistedRecentlyViewedState {
+export function normalizeRecentlyViewedState(value: unknown): PersistedRecentlyViewedState {
   if (!value || typeof value !== "object") {
     return { ids: [], byId: {} }
   }

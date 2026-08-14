@@ -120,9 +120,11 @@ export function HomeScreen() {
           </View>
         }
         ListEmptyComponent={
-          categoriesQuery.isError || (categoriesQuery.isSuccess && !discoveryCategory) ? (
-            <SectionEmpty message="No popular recipes are available right now." />
-          ) : popularQuery.isPending || categoriesQuery.isPending ? (
+          categoriesQuery.isPending ? (
+            <PopularSkeletonGrid />
+          ) : categoriesQuery.isError ? (
+            <SectionEmpty message="Popular recipes will appear after categories load." />
+          ) : popularQuery.isPending ? (
             <PopularSkeletonGrid />
           ) : popularQuery.isError ? (
             <SectionError

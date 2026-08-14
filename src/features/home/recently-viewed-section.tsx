@@ -1,7 +1,6 @@
-import { FlashList, type ListRenderItem } from "@shopify/flash-list"
 import { Link } from "expo-router"
 import { useCallback } from "react"
-import { Alert, Pressable, Text, View } from "react-native"
+import { Alert, Pressable, ScrollView, Text, View } from "react-native"
 import { useShallow } from "zustand/react/shallow"
 
 import { RecipeImage } from "@/components/recipe-image"
@@ -19,14 +18,6 @@ export function RecentlyViewedSection() {
   const isHydrated = useRecentlyViewedStore((state) => state.isHydrated)
   const recipes = useRecentlyViewedStore(useShallow(selectRecentlyViewed))
   const clearHistory = useRecentlyViewedStore((state) => state.clearHistory)
-
-  const renderRecipe = useCallback<ListRenderItem<RecentlyViewedRecipe>>(({ item }) => {
-    return (
-      <View className="pr-md" style={{ width: CARD_WIDTH }}>
-        <RecentlyViewedCard recipe={item} />
-      </View>
-    )
-  }, [])
 
   const onClearPress = useCallback(() => {
     Alert.alert("Clear recently viewed?", "This removes your local recipe history from this device.", [
@@ -76,16 +67,18 @@ export function RecentlyViewedSection() {
       {recipes.length === 0 ? (
         <SectionEmpty message="Recipes you open will appear here so you can jump back in quickly." />
       ) : (
-        <View style={{ height: 220 }}>
-          <FlashList
-            data={recipes}
-            horizontal
-            keyExtractor={(item) => item.id}
-            renderItem={renderRecipe}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingRight: spacing.lg }}
-          />
-        </View>
+        <ScrollView
+          horizontal
+          accessibilityLabel="Recently viewed recipes"
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingRight: spacing.lg }}
+        >
+          {recipes.map((recipe) => (
+            <View key={recipe.id} className="pr-md" style={{ width: CARD_WIDTH }}>
+              <RecentlyViewedCard recipe={recipe} />
+            </View>
+          ))}
+        </ScrollView>
       )}
     </View>
   )
@@ -102,7 +95,12 @@ function RecentlyViewedCard({ recipe }: { recipe: RecentlyViewedRecipe }) {
         style={shadows.sm}
         className="min-h-[44px] overflow-hidden rounded-xl border border-border bg-surface-elevated dark:border-border-dark dark:bg-surface-elevated-dark"
       >
-        <RecipeImage uri={recipe.imageUrl} recyclingKey={recipe.id} className="aspect-square w-full" />
+        <RecipeImage
+          uri={recipe.imageUrl}
+          recyclingKey={recipe.id}
+          accessibilityLabel={`${recipe.name} photo`}
+          className="aspect-square w-full"
+        />
         <View className="px-sm py-sm">
           <Text
             numberOfLines={2}

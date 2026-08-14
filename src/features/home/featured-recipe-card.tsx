@@ -23,7 +23,12 @@ export function FeaturedRecipeCard({ recipe }: FeaturedRecipeCardProps) {
           className="min-h-[44px] overflow-hidden rounded-xl border border-border bg-surface-elevated dark:border-border-dark dark:bg-surface-elevated-dark"
         >
           <View className="h-56 w-full">
-            <RecipeImage uri={recipe.imageUrl} recyclingKey={recipe.id} className="h-full w-full" />
+            <RecipeImage
+              uri={recipe.imageUrl}
+              recyclingKey={recipe.id}
+              variant="full"
+              className="h-full w-full"
+            />
             <View className="absolute inset-x-0 bottom-0 bg-black/55 px-lg py-md">
               <Text className="text-xs font-medium uppercase tracking-wide text-white/80">Featured</Text>
               <Text numberOfLines={2} className="mt-xs text-xl font-bold text-white">

@@ -4,6 +4,7 @@ import { queryKeys } from "@/data/query-keys"
 import { recipeRepository } from "@/data/recipes/repository"
 
 const CATALOG_STALE_TIME_MS = 30 * 60_000
+const FEATURED_STALE_TIME_MS = 5 * 60_000
 
 export function useSearchRecipes(name: string) {
   const query = name.trim()
@@ -30,7 +31,7 @@ export function useRandomRecipe(enabled = true) {
     queryKey: queryKeys.recipes.random(),
     queryFn: ({ signal }) => recipeRepository.getRandom({ signal }),
     enabled,
-    staleTime: 0,
+    staleTime: FEATURED_STALE_TIME_MS,
   })
 }
 

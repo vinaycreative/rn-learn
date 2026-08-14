@@ -13,6 +13,22 @@ const SEARCH_DEBOUNCE_MS = 350
 
 export type ExploreMode = "browse" | "search" | "category" | "area"
 
+export function getExploreMode(searchInput: string, category: string, area: string): ExploreMode {
+  if (searchInput.trim().length > 0) {
+    return "search"
+  }
+
+  if (category.trim().length > 0) {
+    return "category"
+  }
+
+  if (area.trim().length > 0) {
+    return "area"
+  }
+
+  return "browse"
+}
+
 type UseExploreOptions = {
   category: string
   area: string
@@ -50,13 +66,7 @@ export function useExplore({ category, area }: UseExploreOptions) {
   const categoryRecipesQuery = useRecipesByCategory(selectedCategory)
   const areaRecipesQuery = useRecipesByArea(selectedArea)
 
-  const mode: ExploreMode = isSearchMode
-    ? "search"
-    : selectedCategory.length > 0
-      ? "category"
-      : selectedArea.length > 0
-        ? "area"
-        : "browse"
+  const mode = getExploreMode(trimmedInput, selectedCategory, selectedArea)
 
   const resultsQuery = useMemo(() => {
     if (mode === "search") {

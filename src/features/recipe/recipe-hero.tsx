@@ -30,6 +30,7 @@ export function RecipeHero({
         <RecipeImage
           uri={recipe.imageUrl}
           recyclingKey={recipe.id}
+          variant="full"
           priority="high"
           accessibilityLabel={`${recipe.name} photo`}
           className="h-full w-full"

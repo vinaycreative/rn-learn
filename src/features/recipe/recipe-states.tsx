@@ -1,39 +1,13 @@
-import { Pressable, Text, View } from "react-native"
-
-import { isDataError } from "@/data/recipes"
+import { ErrorState } from "@/components/async-state"
+import { Text, View } from "react-native"
 
 type RecipeErrorProps = {
   error: unknown
   onRetry: () => void
 }
 
-export function getUserFacingErrorMessage(error: unknown): string {
-  if (isDataError(error)) {
-    return error.message
-  }
-
-  return "Something went wrong. Please try again."
-}
-
 export function RecipeError({ error, onRetry }: RecipeErrorProps) {
-  return (
-    <View className="items-start rounded-xl bg-surface px-lg py-lg dark:bg-surface-dark">
-      <Text className="text-sm font-medium text-error dark:text-error-dark">Could not load this recipe</Text>
-      <Text className="mt-xs text-sm text-foreground-muted dark:text-foreground-muted-dark">
-        {getUserFacingErrorMessage(error)}
-      </Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Retry"
-        onPress={onRetry}
-        className="mt-md min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-primary px-lg dark:bg-primary-dark"
-      >
-        <Text className="text-sm font-semibold text-primary-foreground dark:text-primary-foreground-dark">
-          Retry
-        </Text>
-      </Pressable>
-    </View>
-  )
+  return <ErrorState error={error} onRetry={onRetry} label="Could not load this recipe" />
 }
 
 export function RecipeMissing() {

@@ -23,6 +23,7 @@ export function SearchField({ value, onChangeText, onSubmit, onClear }: SearchFi
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
         accessibilityLabel="Search recipes"
+        accessibilityHint="Enter a recipe name"
         accessibilityRole="search"
         autoCapitalize="none"
         autoCorrect={false}

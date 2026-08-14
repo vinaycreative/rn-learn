@@ -1,6 +1,7 @@
 import { Stack, useLocalSearchParams } from "expo-router"
 
 import { RecipeDetailsScreen } from "@/features/recipe"
+import { readRouteParam } from "@/lib/route-params"
 
 export default function RecipeDetailsRoute() {
   const params = useLocalSearchParams<{ id?: string | string[] }>()
@@ -8,15 +9,7 @@ export default function RecipeDetailsRoute() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false, title: "Recipe" }} />
-      <RecipeDetailsScreen recipeId={readParam(params.id)} />
+      <RecipeDetailsScreen recipeId={readRouteParam(params.id)} />
     </>
   )
-}
-
-function readParam(value: string | string[] | undefined): string {
-  if (Array.isArray(value)) {
-    return value[0] ?? ""
-  }
-
-  return value ?? ""
 }

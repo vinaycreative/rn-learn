@@ -3,35 +3,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 /**
  * Typed AsyncStorage helpers for application persistence.
  * Feature stores should use this boundary rather than calling AsyncStorage directly.
+ * Persistence failures are swallowed so local-storage problems cannot crash the UI.
  */
 export const storage = {
   async getItem(key: string): Promise<string | null> {
-    return AsyncStorage.getItem(key)
-  },
-
-  async setItem(key: string, value: string): Promise<void> {
-    await AsyncStorage.setItem(key, value)
-  },
-
-  async removeItem(key: string): Promise<void> {
-    await AsyncStorage.removeItem(key)
-  },
-
-  async getJSON<T>(key: string): Promise<T | null> {
-    const raw = await AsyncStorage.getItem(key)
-
-    if (raw === null) {
-      return null
-    }
-
     try {
-      return JSON.parse(raw) as T
+      return await AsyncStorage.getItem(key)
     } catch {
       return null
     }
   },
 
-  async setJSON<T>(key: string, value: T): Promise<void> {
-    await AsyncStorage.setItem(key, JSON.stringify(value))
+  async setItem(key: string, value: string): Promise<void> {
+    try {
+      await AsyncStorage.setItem(key, value)
+    } catch {
+      // Persistence is best-effort. In-memory store state remains the source of truth.
+    }
+  },
+
+  async removeItem(key: string): Promise<void> {
+    try {
+      await AsyncStorage.removeItem(key)
+    } catch {
+      // Persistence is best-effort.
+    }
   },
 }

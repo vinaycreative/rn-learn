@@ -25,3 +25,12 @@ Install project dependencies:
 ```bash
 npm install
 ```
+
+# Validation
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npx expo-doctor
+```

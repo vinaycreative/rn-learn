@@ -39,7 +39,7 @@ async function getJson(
   }
 
   if (!response.ok) {
-    throw new DataError("api", `The recipe service failed with status ${response.status}.`)
+    throw new DataError("api", "The recipe service is unavailable right now. Please try again.")
   }
 
   try {

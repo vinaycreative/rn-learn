@@ -35,7 +35,7 @@ function createFavorite(recipe: SavedRecipeInput, savedAt = Date.now()): Favorit
   }
 }
 
-function normalizeFavoritesState(value: unknown): PersistedFavoritesState {
+export function normalizeFavoritesState(value: unknown): PersistedFavoritesState {
   if (!value || typeof value !== "object") {
     return { ids: [], byId: {} }
   }
