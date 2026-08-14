@@ -6,7 +6,7 @@ Feature implementation
 
 ## Current Focus
 
-Home discovery screen.
+Explore search and browsing.
 
 ---
 
@@ -29,6 +29,7 @@ Home discovery screen.
 - [x] Zod configured
 - [x] Recipe data layer configured (TheMealDB client, schemas, repository, query hooks)
 - [x] Home discovery screen (featured random recipe, categories, popular recipes)
+- [x] Explore screen (name search, category browsing, area/cuisine browsing)
 - [ ] Development build configured
 
 ---
@@ -41,7 +42,6 @@ None
 
 ## Next
 
-- Implement Explore
 - Implement Recipe Details
 - Implement Favorites
 - Implement Settings
